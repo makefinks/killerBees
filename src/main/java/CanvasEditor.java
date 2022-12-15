@@ -1,27 +1,24 @@
-package walleditor;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 
-public class Canvas extends JPanel implements MouseListener, KeyListener {
+public class CanvasEditor extends JPanel implements MouseListener, KeyListener {
 
 
-    ArrayList<Point>line = new ArrayList<>();
+    ArrayList<Point> line = new ArrayList<>();
 
     Timer t;
     Double[][] winkel;
 
-    public Canvas(int high,int with){
+    public CanvasEditor(int high, int with){
+
         this.setSize(high,with);
         this.setRequestFocusEnabled(true);
         this.setVisible(true);
         this.addMouseListener(this);
 
-        winkel =new Double[this.getWidth()][this.getHeight()];
+        winkel = new Double[this.getWidth()][this.getHeight()];
 
         repaint();
     }
@@ -30,7 +27,6 @@ public class Canvas extends JPanel implements MouseListener, KeyListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
 
         g.setColor(Color.black);
         for(int i=0;i< winkel.length;i++){
@@ -167,11 +163,7 @@ public class Canvas extends JPanel implements MouseListener, KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        if(e.getKeyCode()==KeyEvent.VK_S){
-            JFileChooser fc = new JFileChooser();
-            File f=fc.getSelectedFile();
-            FileWriter fileWriter;
-        }
+
     }
 
     @Override
@@ -182,5 +174,9 @@ public class Canvas extends JPanel implements MouseListener, KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
 
+    }
+
+    public Double[][] getWinkel() {
+        return winkel;
     }
 }

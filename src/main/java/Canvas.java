@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.security.AllPermission;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -7,13 +8,18 @@ import javax.swing.JPanel;
 public class Canvas extends JPanel {
 
 	ArrayList<Vehicle> 			allVehicles;
+	ArrayList<Target> 			allTargets;
+
+	Double[][] winkel;
 	double pix;	
-	
-	Canvas(ArrayList<Vehicle> allVehicles, double pix){
+
+
+	Canvas(ArrayList<Vehicle> allVehicles,ArrayList<Target> allTargets, double pix, Double[][] winkel){
 		this.allVehicles = allVehicles;
+		this.allTargets = allTargets;
 		this.pix         = pix;
 		this.setBackground(Color.WHITE);
-		setSize(5000,5000);
+		//setSize(5000,5000);
 	}
 
 	public Polygon kfzInPolygon(Vehicle fz){
@@ -42,18 +48,30 @@ public class Canvas extends JPanel {
     	q.addPoint(x4, y4);
 		return q;
 	}
-	
+
+
+
     public void paintComponent(Graphics g) {
-    	super.paintComponent(g);
+    	//super.paintComponent(g);
+
     	Graphics2D g2d = (Graphics2D) g;
 
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+		System.out.println("called");
+
+		for(int x=0;x<winkel.length; x++){
+			for(int y=0; y<winkel[0].length; y++){
+				if(winkel[x][y] != 0.0){
+					g2d.drawLine(x,y,x,y);
+				}
+			}
+		}
     	
    	  	for(int i=0;i<allVehicles.size();i++){
       		Vehicle fz = allVehicles.get(i);
       		Polygon q = kfzInPolygon(fz);
-      		
-          	
+
           	if(fz.type==1)g2d.setColor(Color.RED);
           	else 		  g2d.setColor(Color.BLACK);
         	g2d.draw(q);
@@ -68,6 +86,12 @@ public class Canvas extends JPanel {
             	g2d.drawOval(x-seite, y-seite, 2*seite, 2*seite);
             	
        		}
-   	  	}        
+   	  	}
+
+			 for(Target t : allTargets){
+			 g2d.setColor(Color.RED);
+			 g2d.drawOval((int) Math.round(t.pos[0]), (int) Math.round(t.pos[1]), 1, 1);
+		 }
+
     }
 }
