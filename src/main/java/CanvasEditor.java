@@ -28,16 +28,17 @@ public class CanvasEditor extends JPanel implements MouseListener, KeyListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+
         g.setColor(Color.black);
         for(int i=0;i< winkel.length;i++){
             for(int j=0;j< winkel[i].length;j++){
                 if(winkel[i][j]!=null){
-                    g.drawRect(i,j,1,1);
+                    g.drawLine(i,j,i,j);
                 }else if(winkel[i][j]==null){
 
                 }
                 else if(winkel[i][j]==100){
-                    g.drawOval(i,j,3,3);
+                    g.drawLine(i,j,i,j);
                 }
 
             }

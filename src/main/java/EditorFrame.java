@@ -15,9 +15,7 @@ public class EditorFrame extends JFrame {
         canvasEditor = new CanvasEditor(this.getWidth(),this.getHeight());
 
         add(canvasEditor);
-
         validate();
-
         setVisible(true);
         canvasEditor.repaint();
     }
@@ -30,8 +28,10 @@ public class EditorFrame extends JFrame {
             public void keyTyped(KeyEvent event) {
                 if (event.getKeyChar() == 's') {
                     System.out.println("The 's' key was typed!");
+                    e.dispose();
                     Simulation xx = new Simulation(canvasEditor.getWinkel());
                     xx.run();
+
                 }
             }
 

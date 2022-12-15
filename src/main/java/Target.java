@@ -4,10 +4,15 @@ public class Target {
 
      double[] pos;
     private static int id;
-
     private boolean targetAcquired;
-    public Target(int[][] angle){
+    Double[][] winkel;
+
+    public Target(Double[][] winkel){
+        this.pos = new double[2];
         id++;
+        this.winkel = winkel;
+        pos[0] = 0;
+        pos[1] = 0;
     }
 
     public void move(){
