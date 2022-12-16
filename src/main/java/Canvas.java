@@ -18,8 +18,9 @@ public class Canvas extends JPanel {
 		this.allVehicles = allVehicles;
 		this.allTargets = allTargets;
 		this.pix         = pix;
+		this.winkel = winkel;
 		this.setBackground(Color.WHITE);
-		//setSize(5000,5000);
+		setSize(1000,800);
 	}
 
 	public Polygon kfzInPolygon(Vehicle fz){
@@ -51,18 +52,19 @@ public class Canvas extends JPanel {
 
 
 
+	@Override
     public void paintComponent(Graphics g) {
-    	//super.paintComponent(g);
+    	super.paintComponent(g);
 
     	Graphics2D g2d = (Graphics2D) g;
 
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-		System.out.println("called");
+		System.out.println("Paint Component called");
 
 		for(int x=0;x<winkel.length; x++){
 			for(int y=0; y<winkel[0].length; y++){
-				if(winkel[x][y] != 0.0){
+				if(winkel[x][y] != null){
 					g2d.drawLine(x,y,x,y);
 				}
 			}

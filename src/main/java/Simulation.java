@@ -8,7 +8,6 @@ public class Simulation extends JFrame {
 	static double pix = 0.2;// 0.2
 	int anzFz = 160;
 
-
 	ArrayList<Vehicle> allVehicles = new ArrayList<Vehicle>();
 	ArrayList<Target> allTargets = new ArrayList<Target>();
 	JPanel canvas;
@@ -18,6 +17,7 @@ public class Simulation extends JFrame {
 		canvas = new Canvas(allVehicles, allTargets, pix, winkel);
 		setTitle("Swarm Simulation");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setVisible(true);
 		setLayout(null);
 
 		for (int k = 0; k < anzFz; k++) {
@@ -28,20 +28,23 @@ public class Simulation extends JFrame {
 		}
 
 		//Add Targets to
-
-		add(canvas);
 		canvas.repaint();
 		setSize(1000, 800);
 		setVisible(true);
 
+
+		add(canvas);
+
 	}
 
-	/*
+
 	public static void main(String args[]) {
-		Simulation xx = new Simulation();
+		Simulation xx = new Simulation(new Double[0][0]);
 		xx.run();
 	}
-	 */
+
+
+
 
 	public void run() {
 		Vehicle v;
@@ -52,7 +55,7 @@ public class Simulation extends JFrame {
 			for (int i = 0; i < allVehicles.size(); i++) {
 				v = allVehicles.get(i);
 				v.steuern(allVehicles);
-				System.out.println(v.pos[0]);
+				//System.out.println(v.pos[0]);
 			}
 
 			//Move all Targets on update
@@ -66,6 +69,8 @@ public class Simulation extends JFrame {
 			} catch (InterruptedException e) {
 			}
 			repaint();
+			canvas.repaint();
+
 		}
 	}
 }

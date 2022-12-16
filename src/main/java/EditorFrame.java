@@ -31,6 +31,8 @@ public class EditorFrame extends JFrame {
                 if (event.getKeyChar() == 's') {
                     System.out.println("The 's' key was typed!");
                     Simulation xx = new Simulation(canvasEditor.getWinkel());
+                    canvasEditor.setVisible(false);
+                    e.add(xx.canvas);
                     xx.run();
                 }
             }

@@ -118,7 +118,7 @@ public class CanvasEditor extends JPanel implements MouseListener, KeyListener {
         double bertrag=Math.sqrt(dx*dx+dy*dy);
         double rx=dx/bertrag;
         double ry=dy/bertrag;
-        while(Math.abs(x)<Math.abs(dx)){
+        while(Math.abs(x)<Math.abs(dx) || Math.abs(y)<Math.abs(dy)){
             winkel[(int)(x+a.x)][(int)(y+a.y)]=angle;
             x+=rx;
             y+=ry;
