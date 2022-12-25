@@ -23,7 +23,7 @@
 			this.allTargets = allTargets;
 			this.pix         = pix;
 			this.setBackground(Color.WHITE);
-			setSize(5000,5000);
+			setPreferredSize(new Dimension(1000,800));
 			log.info("Simulation Canvas created");
 			this.winkel = winkel;
 		}
@@ -55,8 +55,14 @@
 			return q;
 		}
 
+		@Override
+		public void paint(Graphics g) {
+			System.out.println("Paint called on Canvas");
+			super.paint(g);
+			paintComponent(g);
+		}
 
-
+		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 

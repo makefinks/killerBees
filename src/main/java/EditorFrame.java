@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 public class EditorFrame extends JFrame {
 
 
-    private static CanvasEditor canvasEditor;
+    private CanvasEditor canvasEditor;
     public EditorFrame(){
         setTitle("Editor");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -20,8 +20,10 @@ public class EditorFrame extends JFrame {
         canvasEditor.repaint();
     }
 
+
     public static void main(String[] args) {
         EditorFrame e= new EditorFrame();
+
 
         e.addKeyListener(new KeyListener() {
             @Override
@@ -29,9 +31,7 @@ public class EditorFrame extends JFrame {
                 if (event.getKeyChar() == 's') {
                     System.out.println("The 's' key was typed!");
                     e.dispose();
-                    Simulation xx = new Simulation(canvasEditor.getWinkel());
-                    canvasEditor.setVisible(false);
-                    e.add(xx.canvas);
+                    Simulation xx = new Simulation(e.canvasEditor.getWinkel());
                     xx.run();
 
                 }
@@ -49,5 +49,14 @@ public class EditorFrame extends JFrame {
         });
 
         e.repaint();
+    }
+
+
+    public  CanvasEditor getCanvasEditor() {
+        return canvasEditor;
+    }
+
+    public void setCanvasEditor(CanvasEditor canvasEditor) {
+        this.canvasEditor = canvasEditor;
     }
 }
