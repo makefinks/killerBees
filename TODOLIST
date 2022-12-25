@@ -1,0 +1,7 @@
+Auf Paul CanvasEditor implementierung warten
+2. Simulation.class abändern für allTargets
+3. Targets.class abändern nur move() ausführen wenn mögliche posiition;
+4. Testen:
+    -Alle Targets und walls da?
+    -Bewegen sich die Targets richtig:
+
