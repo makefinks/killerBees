@@ -243,30 +243,27 @@ public class Vehicle {
 			startY=(int) newPoint[1];
 		}
 		boolean flag=false;
-		for(int x=startX;x<startX+dx;x++){
+		for(int x=startX;x<startX+dx&&x<winkel.length;x++){
 
-			for(int y=startY;y<startY+dy;y++){
+			for(int y=startY;y<startY+dy&&y<winkel[x].length;y++){
 
 				if(winkel[x][y]!=null){
 					System.out.println("Collision");
-					 flag = true;
+					double speed=Math.sqrt(vel[0]*vel[0]+vel[1]*vel[1]);
+					double angle = Math.atan2(pos[1]-newPoint[1], pos[0]-newPoint[0]);
+					angle=winkel[x][y]-(angle-winkel[x][y]);
+					vel[0]=Math.cos(angle)*speed;
+					vel[1]=Math.sin(angle)*speed;
+
 					 break;
 				}
 			}
 		}
 
-		if(flag){
-			vel[0] = -Math.abs(vel[0]);
-			pos[0] = pos[0] + vel[0];
-			//System.out.println(pos[0]);
-			vel[1] = -Math.abs(vel[1]);
-			pos[1] = pos[1] + vel[1];
-			//System.out.println(pos[1]);
-		}
-		else{
+
 			pos[0] = pos[0] + vel[0];
 			pos[1] = pos[1] + vel[1];
-		}
+
 
 		//System.out.println(pos[0] + " : " + pos[1]);
 		position_Umgebung_anpassen_Box();
