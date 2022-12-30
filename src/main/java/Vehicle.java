@@ -21,7 +21,6 @@ public class Vehicle {
 	Vehicle(Double[][] winkel) {
 		this.winkel = winkel;
 
-
 		allId++;
 		this.id = allId;
 		this.FZL = 2;
@@ -154,9 +153,13 @@ public class Vehicle {
 			vel_dest[0] += richtung[0];
 			vel_dest[1] += richtung[1];
 		}
-		vel_dest[0] = vel_dest[0] / neighbours.size();
-		vel_dest[1] = vel_dest[1] / neighbours.size();
-		acc_dest = beschleunigungErmitteln(vel_dest);
+
+		if(neighbours.size() > 0){
+			vel_dest[0] = vel_dest[0] / neighbours.size();
+			vel_dest[1] = vel_dest[1] / neighbours.size();
+			acc_dest = beschleunigungErmitteln(vel_dest);
+		}
+
 		return acc_dest;
 	}
 
@@ -234,7 +237,7 @@ public class Vehicle {
 					double res = velocityPath.ptLineDist(point);
 
 					//if res equals 0 the line interesects with the pixel
-					if(res < 0.01) {
+					if(res == 0) {
 						System.out.println("collision");
 						flag = true;
 					}

@@ -37,7 +37,7 @@
 			int    b    = (int)(fz.FZB/pix);
 			int    x    = (int)(fz.pos[0]/pix);
 			int    y    = (int)(fz.pos[1]/pix);
-			int    dia  = (int)(Math.sqrt(Math.pow(l/2, 2)+Math.pow(b/2, 2)));
+			int    dia  = 5 * (int)(Math.sqrt(Math.pow(l/2, 2)+Math.pow(b/2, 2)));
 			double    t = Vektorrechnung.winkel(fz.vel);
 			double phi1 = Math.atan(fz.FZB/fz.FZL);
 			double phi2 = Math.PI-phi1;
@@ -91,7 +91,10 @@
 
 				if(fz.type==1)g2d.setColor(Color.RED);
 				else 		  g2d.setColor(Color.BLACK);
-				g2d.fillOval((int) fz.pos[0], (int) fz.pos[1], 10, 10);
+
+				g2d.draw(q);
+
+				//g2d.fillOval((int) fz.pos[0], (int) fz.pos[1], 10, 10);
 
 				int    x  = (int)(fz.pos[0]/pix);
 				int    y  = (int)(fz.pos[1]/pix);
