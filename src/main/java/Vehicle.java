@@ -1,3 +1,6 @@
+import java.awt.*;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class Vehicle {
@@ -13,8 +16,12 @@ public class Vehicle {
 	final double max_acc; // Maximale Beschleunigung
 	final double max_vel; // Maximale Geschwindigkeit
 
+	Double[][] winkel;
 
-	Vehicle() {
+	Vehicle(Double[][] winkel) {
+		this.winkel = winkel;
+
+
 		allId++;
 		this.id = allId;
 		this.FZL = 2;
@@ -27,8 +34,8 @@ public class Vehicle {
 
 		pos = new double[2];
 		vel = new double[2];
-		pos[0] = Simulation.pix * 500 * Math.random();
-		pos[1] = Simulation.pix * 500 * Math.random();
+		pos[0] = Simulation.pix * Simulation.width * Math.random();
+		pos[1] = Simulation.pix * Simulation.height * Math.random();
 		vel[0] = max_vel * Math.random();
 		vel[1] = max_vel * Math.random();
 	}
@@ -202,12 +209,55 @@ public class Vehicle {
 		vel[0] = vel[0] * max_vel;
 		vel[1] = vel[1] * max_vel;
 
+		//Kollisionsberechnung
 
-		// 3. Neue Position berechnen
-		pos[0] = pos[0] + vel[0];
-		pos[1] = pos[1] + vel[1];
+		// Define the velocity vector as a line with starting point (x1, y1) and ending point (x2, y2)
+		double x1 = pos[0];
+		double y1 = pos[1];
+		double x2 = x1 + vel[0];
+		double y2 = y1 + vel[1];
+		Line2D velocityVector = new Line2D.Double(x1, y1, x2, y2);
 
-		
+		Double[] newPoint = new Double[2];
+		newPoint[0] = pos[0] + vel[0];
+		newPoint[1] = pos[1] + vel[1];
+
+		Line2D velocityPath = new Line2D.Double(pos[0], pos[1], newPoint[0], newPoint[1]);
+
+		boolean flag = false;
+		for(int i = 0; i< winkel.length; i++){
+			for (int x = 0; x<winkel[i].length; x++){
+
+				//check if pixel is set
+				if(winkel[i][x] != null){
+					Point point = new Point(i, x);
+					double res = velocityPath.ptLineDist(point);
+
+					//if res equals 0 the line interesects with the pixel
+					if(res < 0.01) {
+						//System.out.println("collision");
+						flag = true;
+					}
+
+				}
+
+			}
+		}
+
+		if(flag){
+			vel[0] = -Math.abs(vel[0]);
+			pos[0] = pos[0] + vel[0];
+			//System.out.println(pos[0]);
+			vel[1] = -Math.abs(vel[1]);
+			pos[1] = pos[1] + vel[1];
+			//System.out.println(pos[1]);
+		}
+		else{
+			pos[0] = pos[0] + vel[0];
+			pos[1] = pos[1] + vel[1];
+		}
+
+		System.out.println(pos[0] + " : " + pos[1]);
 		position_Umgebung_anpassen_Box();
 	}
 
@@ -216,7 +266,7 @@ public class Vehicle {
 			vel[0] = Math.abs(vel[0]);
 			pos[0] = pos[0] + vel[0];
 		}
-		if (pos[0] > 1000 * Simulation.pix) {
+		if (pos[0] > Canvas.width * Simulation.pix) {
 			vel[0] = -Math.abs(vel[0]);
 			pos[0] = pos[0] + vel[0];
 		}
@@ -224,7 +274,7 @@ public class Vehicle {
 			vel[1] = Math.abs(vel[1]);
 			pos[1] = pos[1] + vel[1];
 		}
-		if (pos[1] > 700 * Simulation.pix) {
+		if (pos[1] > Canvas.height * Simulation.pix) {
 			vel[1] = -Math.abs(vel[1]);
 			pos[1] = pos[1] + vel[1];
 		}

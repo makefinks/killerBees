@@ -8,9 +8,9 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 public class Simulation extends JFrame {
-	static int sleep = 8; // 8
-	static double pix = 0.2;// 0.2
-	int anzFz = 160;
+	static int sleep = 2; // 8
+	static double pix = 1;// 0.2
+	int anzFz = 3;
 	int anzZiele = 2;
 
 	Logger log = Logger.getLogger("SimLogger");
@@ -19,14 +19,23 @@ public class Simulation extends JFrame {
 
 	Canvas canvas;
 
+	static int width;
+	static int height;
+
 	Simulation(Double[][] winkel) {
+
+		setSize(1000, 800);
+		width = getWidth();
+		height = getHeight();
+
+		setLocationRelativeTo(null);
 
 		setTitle("Swarm Simulation");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 
 		for (int k = 0; k < anzFz; k++) {
-			Vehicle car = new Vehicle();
+			Vehicle car = new Vehicle(winkel);
 			if (k == 0)
 				car.type = 1;
 			allVehicles.add(car);
@@ -37,12 +46,14 @@ public class Simulation extends JFrame {
 			allTargets.add(target);
 		}
 
+
+		log.info("WINKEL SIZE " + winkel.length);
+
 		canvas = new Canvas(allVehicles, allTargets, pix, winkel);
 
 
 		add(canvas, BorderLayout.CENTER);
 		validate();
-		setSize(1000, 800);
 		setVisible(true);
 	}
 
@@ -54,7 +65,7 @@ public class Simulation extends JFrame {
 
 			while (true) {
 
-				log.info("sim running...");
+				//log.info("sim running...");
 
 				//Move all Vehicles on update
 				for (int i = 0; i < allVehicles.size(); i++) {

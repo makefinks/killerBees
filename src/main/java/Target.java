@@ -2,7 +2,7 @@ import java.util.Random;
 
 public class Target {
 
-     double[] pos;
+    double[] pos;
     private static int id;
     private boolean targetAcquired;
     Double[][] winkel;

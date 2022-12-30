@@ -17,6 +17,9 @@
 		double pix;
 		boolean firstDraw;
 
+		static int height;
+		static int width;
+
 
 		Canvas(ArrayList<Vehicle> allVehicles,ArrayList<Target> allTargets, double pix, Double[][] winkel){
 			this.allVehicles = allVehicles;
@@ -55,18 +58,16 @@
 			return q;
 		}
 
-		@Override
-		public void paint(Graphics g) {
-			System.out.println("Paint called on Canvas");
-			super.paint(g);
-			paintComponent(g);
-		}
+
 
 		@Override
 		public void paintComponent(Graphics g) {
+
+			width = getWidth();
+			height = getHeight();
 			super.paintComponent(g);
 
-			log.info("Canvas paintComponent called");
+			//log.info("Canvas paintComponent called");
 
 			Graphics2D g2d = (Graphics2D) g;
 
@@ -75,7 +76,7 @@
 				for(int x=0;x<winkel.length; x++){
 					for(int y=0; y<winkel[0].length; y++){
 						if(winkel[x][y] != null){
-							g2d.drawLine(x,y,x,y);
+							g2d.drawLine((int) (x/pix),(int) (y/pix),(int) (x/pix),(int) (y/pix));
 						}
 					}
 				}
@@ -84,9 +85,13 @@
 				Vehicle fz = allVehicles.get(i);
 				Polygon q = kfzInPolygon(fz);
 
+				//Draw velocity
+				g2d.setColor(Color.BLUE);
+				g2d.drawLine((int) (fz.pos[0]/pix), (int) (fz.pos[1]/pix), (int) ((fz.pos[0] + fz.vel[0])/pix), (int) ((fz.pos[1] + fz.vel[1])/pix));
+
 				if(fz.type==1)g2d.setColor(Color.RED);
 				else 		  g2d.setColor(Color.BLACK);
-				g2d.draw(q);
+				g2d.fillOval((int) fz.pos[0], (int) fz.pos[1], 5, 5);
 
 				int    x  = (int)(fz.pos[0]/pix);
 				int    y  = (int)(fz.pos[1]/pix);
