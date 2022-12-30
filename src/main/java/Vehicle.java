@@ -235,7 +235,7 @@ public class Vehicle {
 
 					//if res equals 0 the line interesects with the pixel
 					if(res < 0.01) {
-						//System.out.println("collision");
+						System.out.println("collision");
 						flag = true;
 					}
 
@@ -257,7 +257,7 @@ public class Vehicle {
 			pos[1] = pos[1] + vel[1];
 		}
 
-		System.out.println(pos[0] + " : " + pos[1]);
+		//System.out.println(pos[0] + " : " + pos[1]);
 		position_Umgebung_anpassen_Box();
 	}
 

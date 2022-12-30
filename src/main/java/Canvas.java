@@ -91,7 +91,7 @@
 
 				if(fz.type==1)g2d.setColor(Color.RED);
 				else 		  g2d.setColor(Color.BLACK);
-				g2d.fillOval((int) fz.pos[0], (int) fz.pos[1], 5, 5);
+				g2d.fillOval((int) fz.pos[0], (int) fz.pos[1], 10, 10);
 
 				int    x  = (int)(fz.pos[0]/pix);
 				int    y  = (int)(fz.pos[1]/pix);
