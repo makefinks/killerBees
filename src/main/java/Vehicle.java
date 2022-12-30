@@ -221,29 +221,37 @@ public class Vehicle {
 		double y2 = y1 + vel[1];
 		Line2D velocityVector = new Line2D.Double(x1, y1, x2, y2);
 
-		Double[] newPoint = new Double[2];
+		double[] newPoint = new double[2];
 		newPoint[0] = pos[0] + vel[0];
 		newPoint[1] = pos[1] + vel[1];
 
 		Line2D velocityPath = new Line2D.Double(pos[0], pos[1], newPoint[0], newPoint[1]);
 
-		boolean flag = false;
-		for(int i = 0; i< winkel.length; i++){
-			for (int x = 0; x<winkel[i].length; x++){
+		int dx =4;
+		int dy=4;
 
-				//check if pixel is set
-				if(winkel[i][x] != null){
-					Point point = new Point(i, x);
-					double res = velocityPath.ptLineDist(point);
+		int startX=0;
+		int startY=0;
+		if(pos[0]<newPoint[0]){
+			startX=(int)pos[0];
+		}else{
+			startX=(int) newPoint[0];
+		}
+		if(pos[1]<newPoint[1]){
+			startY=(int)pos[1];
+		}else{
+			startY=(int) newPoint[1];
+		}
+		boolean flag=false;
+		for(int x=startX;x<startX+dx;x++){
 
-					//if res equals 0 the line interesects with the pixel
-					if(res == 0) {
-						System.out.println("collision");
-						flag = true;
-					}
+			for(int y=startY;y<startY+dy;y++){
 
+				if(winkel[x][y]!=null){
+					System.out.println("Collision");
+					 flag = true;
+					 break;
 				}
-
 			}
 		}
 
