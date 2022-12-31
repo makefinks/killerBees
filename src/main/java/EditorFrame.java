@@ -29,10 +29,16 @@ public class EditorFrame extends JFrame {
             @Override
             public void keyTyped(KeyEvent event) {
                 if (event.getKeyChar() == 's') {
-                    System.out.println("The 's' key was typed!");
-                    e.dispose();
-                    Simulation xx = new Simulation(e.canvasEditor.getWinkel());
-                    xx.run();
+
+                    if(e.canvasEditor.getSwarmPositions().size() > 0){
+                        e.dispose();
+                        Simulation xx = new Simulation(e.canvasEditor.getWinkel(), e.canvasEditor.getSwarmPositions());
+                        xx.run();
+
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(e, "Please select atleast one entry point for the swarm!");
+                    }
 
                 }
             }

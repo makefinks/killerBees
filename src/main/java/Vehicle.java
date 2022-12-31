@@ -1,7 +1,6 @@
-import java.awt.*;
 import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Vehicle {
 	static int allId = 0;
@@ -18,9 +17,11 @@ public class Vehicle {
 
 	Double[][] winkel;
 
-	Vehicle(Double[][] winkel) {
-		this.winkel = winkel;
+	ArrayList<Integer[]> swarmPositions = new ArrayList<>();
 
+	Vehicle(Double[][] winkel, ArrayList<Integer[]> swarmPositions) {
+		this.winkel = winkel;
+		this.swarmPositions = swarmPositions;
 		allId++;
 		this.id = allId;
 		this.FZL = 2;
@@ -33,8 +34,14 @@ public class Vehicle {
 
 		pos = new double[2];
 		vel = new double[2];
-		pos[0] = Simulation.pix * Simulation.width * Math.random();
-		pos[1] = Simulation.pix * Simulation.height * Math.random();
+
+		//generate random pos based on swarmPositions
+		Random rand = new Random();
+		int posFromIndex = rand.nextInt(swarmPositions.size());
+
+
+		pos[0] = swarmPositions.get(posFromIndex)[0] + Simulation.pix * 50 * Math.random();
+		pos[1] = swarmPositions.get(posFromIndex)[1] + Simulation.pix * 50 * Math.random();
 		vel[0] = max_vel * Math.random();
 		vel[1] = max_vel * Math.random();
 	}
@@ -204,13 +211,14 @@ public class Vehicle {
 
 	void steuern(ArrayList<Vehicle> allVehicles) {
 		double[] acc_dest = beschleunigung_festlegen(allVehicles);
-	
-		// 2. Neue Geschwindigkeit berechnen
+
+// 2. Neue Geschwindigkeit berechnen
 		vel[0] = vel[0] + acc_dest[0];
 		vel[1] = vel[1] + acc_dest[1];
 		vel    = Vektorrechnung.normalize(vel);
 		vel[0] = vel[0] * max_vel;
 		vel[1] = vel[1] * max_vel;
+
 
 		//Kollisionsberechnung
 
@@ -227,7 +235,7 @@ public class Vehicle {
 
 		Line2D velocityPath = new Line2D.Double(pos[0], pos[1], newPoint[0], newPoint[1]);
 
-		int dx =4;
+		int dx=4;
 		int dy=4;
 
 		int startX=0;
@@ -248,21 +256,73 @@ public class Vehicle {
 			for(int y=startY;y<startY+dy&&y<winkel[x].length;y++){
 
 				if(winkel[x][y]!=null){
-					System.out.println("Collision");
+					//System.out.println("Collision");
 					double speed=Math.sqrt(vel[0]*vel[0]+vel[1]*vel[1]);
 					double angle = Math.atan2(pos[1]-newPoint[1], pos[0]-newPoint[0]);
 					angle=winkel[x][y]-(angle-winkel[x][y]);
+					//System.out.println(angle);
 					vel[0]=Math.cos(angle)*speed;
 					vel[1]=Math.sin(angle)*speed;
-
+					flag = true;
 					 break;
 				}
 			}
 		}
 
+		//check if the new position would result in another wall being passed and reduce the velocity so it does not pass the wall
+		double[] newPosition = new double[]{pos[0]+vel[0], pos[1]+vel[1]};
 
-			pos[0] = pos[0] + vel[0];
-			pos[1] = pos[1] + vel[1];
+		double distance = 0;
+		//unten links
+		if(newPosition[0] > pos[0] && newPosition[1] > pos[0]){
+			for(int x = (int) pos[0]; x<newPosition[0]; x++){
+				for(int y = (int) pos[1]; y<newPosition[1]; y++){
+					if(winkel[x][y]!=null){
+						distance = Math.sqrt(Math.pow(x - pos[0], 2) + Math.pow(y - pos[1], 2));
+					}
+				}
+			}
+			//oben rechts
+		} else if (newPosition[0] > pos[0] && newPosition[1] < pos[1]) {
+			for(int x = (int) pos[0]; x<newPosition[0]; x++){
+				for(int y = (int) pos[1]; y>newPosition[1]; y--){
+					if(winkel[x][y]!=null){
+						distance = Math.sqrt(Math.pow(x - pos[0], 2) + Math.pow(y - pos[1], 2));
+					}
+				}
+			}
+		}
+		//oben links
+		else if (newPosition[0] < pos[0] && newPosition[1] < pos[1]) {
+			for(int x = (int) pos[0]; x>newPosition[0]; x--){
+				for(int y = (int) pos[1]; y>newPosition[1]; y--){
+					if(winkel[x][y]!=null){
+						distance = Math.sqrt(Math.pow(x - pos[0], 2) + Math.pow(y - pos[1], 2));
+					}
+				}
+			}
+		}else if (newPosition[0] < pos[0] && newPosition[1] > pos[1]) {
+			for(int x = (int) pos[0]; x>newPosition[0]; x--){
+				for(int y = (int) pos[1]; y<newPosition[1]; y++){
+					if(winkel[x][y]!=null){
+						distance = Math.sqrt(Math.pow(x - pos[0], 2) + Math.pow(y - pos[1], 2));
+
+					}
+				}
+			}
+		}
+
+		if(distance != 0) {
+			vel = Vektorrechnung.normalize(vel);
+			vel[0] = vel[0] * distance;
+			vel[1] = vel[1] * distance;
+		}
+
+		pos[0] = pos[0] + vel[0];
+		pos[1] = pos[1] + vel[1];
+
+
+
 
 
 		//System.out.println(pos[0] + " : " + pos[1]);

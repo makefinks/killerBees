@@ -101,9 +101,9 @@
 
 				if(fz.type==1){
 					int seite = (int)(fz.rad_zus/pix);
-					g2d.drawOval(x-seite, y-seite, 2*seite, 2*seite);
+					//g2d.drawOval(x-seite, y-seite, 2*seite, 2*seite);
 					seite = (int)(fz.rad_sep/pix);
-					g2d.drawOval(x-seite, y-seite, 2*seite, 2*seite);
+					//g2d.drawOval(x-seite, y-seite, 2*seite, 2*seite);
 
 				}
 			}

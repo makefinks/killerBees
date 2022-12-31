@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class CanvasEditor extends JPanel implements MouseListener, KeyListener {
 
 
+    ArrayList<Integer[]> swarmPositions = new ArrayList<>();
     ArrayList<Point> line = new ArrayList<>();
 
     Timer t;
@@ -28,28 +29,45 @@ public class CanvasEditor extends JPanel implements MouseListener, KeyListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        Graphics2D g2d = (Graphics2D) g;
 
-        g.setColor(Color.black);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        //Info display
+        g2d.drawString("draw obstacles:  [hold left-mouse-button]", 0, 10);
+        g2d.setColor(Color.RED);
+        g2d.drawString("swarm location: [hold shift] + [left-mouse-button]", 0, 20);
+
+
+        //draw Swarm positions
+
+        for(Integer[] pos : swarmPositions){
+            g2d.setColor(Color.RED);
+            g2d.drawLine(pos[0]-10, pos[1]-10, pos[0]+10, pos[1]+10);
+            g2d.drawLine(pos[0]-10, pos[1]+10, pos[0]+10, pos[1]-10);
+        }
+
+        g2d.setColor(Color.black);
         for(int i=0;i< winkel.length;i++){
             for(int j=0;j< winkel[i].length;j++){
                 if(winkel[i][j]!=null){
-                    g.drawLine(i,j,i,j);
+                    g2d.drawLine(i,j,i,j);
                 }else if(winkel[i][j]==null){
 
                 }
                 else if(winkel[i][j]==100){
-                    g.drawLine(i,j,i,j);
+                    g2d.drawLine(i,j,i,j);
                 }
 
             }
         }
-        g.setColor(Color.RED);
+        g2d.setColor(Color.RED);
         if(line.size()==0){
             return;
         }
         Point befor=line.get(0);
         for(int i=0;i<line.size();i++){
-            g.drawLine(befor.x,befor.y,line.get(i).x,line.get(i).y);
+            g2d.drawLine(befor.x,befor.y,line.get(i).x,line.get(i).y);
             befor=line.get(i);
         }
 
@@ -59,7 +77,9 @@ public class CanvasEditor extends JPanel implements MouseListener, KeyListener {
     @Override
     public void mouseClicked(MouseEvent e) {
 
-
+        if(e.isShiftDown()){
+            swarmPositions.add(new Integer[]{e.getX(), e.getY()});
+        }
 
     }
 
@@ -179,5 +199,9 @@ public class CanvasEditor extends JPanel implements MouseListener, KeyListener {
 
     public Double[][] getWinkel() {
         return winkel;
+    }
+
+    public ArrayList<Integer[]> getSwarmPositions() {
+        return swarmPositions;
     }
 }

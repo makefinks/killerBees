@@ -22,7 +22,7 @@ public class Simulation extends JFrame {
 	static int width;
 	static int height;
 
-	Simulation(Double[][] winkel) {
+	Simulation(Double[][] winkel, ArrayList<Integer[]> swarmPositions) {
 
 		setSize(1000, 800);
 		width = getWidth();
@@ -35,7 +35,7 @@ public class Simulation extends JFrame {
 		setLayout(new BorderLayout());
 
 		for (int k = 0; k < anzFz; k++) {
-			Vehicle car = new Vehicle(winkel);
+			Vehicle car = new Vehicle(winkel, swarmPositions);
 			if (k == 0)
 				car.type = 1;
 			allVehicles.add(car);
@@ -50,7 +50,6 @@ public class Simulation extends JFrame {
 		log.info("WINKEL SIZE " + winkel.length);
 
 		canvas = new Canvas(allVehicles, allTargets, pix, winkel);
-
 
 		add(canvas, BorderLayout.CENTER);
 		validate();
