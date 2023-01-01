@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 
 public class EditorFrame extends JFrame {
 
@@ -32,7 +33,12 @@ public class EditorFrame extends JFrame {
 
                     if(e.canvasEditor.getSwarmPositions().size() > 0){
                         e.dispose();
-                        Simulation xx = new Simulation(e.canvasEditor.getWinkel(), e.canvasEditor.getSwarmPositions());
+                        Simulation xx = null;
+                        try {
+                            xx = new Simulation(e.canvasEditor.getWinkel(), e.canvasEditor.getSwarmPositions());
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
                         xx.run();
 
                     }

@@ -1,5 +1,7 @@
 import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Vehicle {
@@ -11,6 +13,8 @@ public class Vehicle {
 	final double FZL; // L�nge
 	final double FZB; // Breite
 	double[] pos; // Position
+
+	double[] last_pos;
 	double[] vel; // Geschwindigkeit
 	final double max_acc; // Maximale Beschleunigung
 	final double max_vel; // Maximale Geschwindigkeit
@@ -34,6 +38,7 @@ public class Vehicle {
 
 		pos = new double[2];
 		vel = new double[2];
+		last_pos = new double[2];
 
 		//generate random pos based on swarmPositions
 		Random rand = new Random();
@@ -184,6 +189,7 @@ public class Vehicle {
 	}
 
 	public double[] beschleunigung_festlegen(ArrayList<Vehicle> allVehicles) {
+
 		double[] acc_dest  = new double[2];
 		double[] acc_dest1 = new double[2];
 		double[] acc_dest2 = new double[2];
@@ -222,6 +228,9 @@ public class Vehicle {
 
 		//Kollisionsberechnung
 
+		//System.out.println("current Pos" + Arrays.toString(pos));
+		//System.out.println("last Pos" + Arrays.toString(last_pos));
+
 		// Define the velocity vector as a line with starting point (x1, y1) and ending point (x2, y2)
 		double x1 = pos[0];
 		double y1 = pos[1];
@@ -232,6 +241,10 @@ public class Vehicle {
 		double[] newPoint = new double[2];
 		newPoint[0] = pos[0] + vel[0];
 		newPoint[1] = pos[1] + vel[1];
+
+		//
+		double[] velCopy = new double[]{vel[0], vel[1]};
+
 
 		Line2D velocityPath = new Line2D.Double(pos[0], pos[1], newPoint[0], newPoint[1]);
 
@@ -256,29 +269,47 @@ public class Vehicle {
 			for(int y=startY;y<startY+dy&&y<winkel[x].length;y++){
 
 				if(winkel[x][y]!=null){
-					//System.out.println("Collision");
-					double speed=Math.sqrt(vel[0]*vel[0]+vel[1]*vel[1]);
-					double angle = Math.atan2(pos[1]-newPoint[1], pos[0]-newPoint[0]);
-					angle=winkel[x][y]-(angle-winkel[x][y]);
-					//System.out.println(angle);
-					vel[0]=Math.cos(angle)*speed;
-					vel[1]=Math.sin(angle)*speed;
-					flag = true;
-					 break;
+
+					Rectangle2D rect = new Rectangle2D.Double(x,y, 1, 1);
+
+					if(rect.intersectsLine(velocityPath)){
+						//System.out.println("Collision");
+						double speed=Math.sqrt(vel[0]*vel[0]+vel[1]*vel[1]);
+						double angle = Math.atan2(pos[1]-newPoint[1], pos[0]-newPoint[0]);
+
+						angle=winkel[x][y]-(angle-winkel[x][y]);
+
+						//System.out.println(angle);
+						vel[0]=Math.cos(angle)*speed;
+						vel[1]=Math.sin(angle)*speed;
+						flag = true;
+						break;
+					}
 				}
 			}
 		}
 
+
+
+		/*
 		//check if the new position would result in another wall being passed and reduce the velocity so it does not pass the wall
 		double[] newPosition = new double[]{pos[0]+vel[0], pos[1]+vel[1]};
 
+		Line2D collisionRoute = new Line2D.Double(pos[0], pos[1], newPosition[0], newPosition[1]);
+
 		double distance = 0;
+		boolean collisionError = false;
 		//unten links
 		if(newPosition[0] > pos[0] && newPosition[1] > pos[0]){
 			for(int x = (int) pos[0]; x<newPosition[0]; x++){
 				for(int y = (int) pos[1]; y<newPosition[1]; y++){
 					if(winkel[x][y]!=null){
-						distance = Math.sqrt(Math.pow(x - pos[0], 2) + Math.pow(y - pos[1], 2));
+						Rectangle2D rect = new Rectangle2D.Double(x, y, 1, 1);
+						if(rect.intersectsLine(collisionRoute)){
+							distance = collisionRoute.ptLineDist(rect.getX(), rect.getY());
+							System.out.println("collison Erorr");
+							break;
+						}
 					}
 				}
 			}
@@ -287,7 +318,13 @@ public class Vehicle {
 			for(int x = (int) pos[0]; x<newPosition[0]; x++){
 				for(int y = (int) pos[1]; y>newPosition[1]; y--){
 					if(winkel[x][y]!=null){
-						distance = Math.sqrt(Math.pow(x - pos[0], 2) + Math.pow(y - pos[1], 2));
+						//distance = Math.sqrt(Math.pow(x - pos[0], 2) + Math.pow(y - pos[1], 2));
+						Rectangle2D rect = new Rectangle2D.Double(x, y, 1, 1);
+						if(rect.intersectsLine(collisionRoute)){
+							distance = collisionRoute.ptLineDist(rect.getX(), rect.getY());
+							System.out.println("collison Erorr");
+							break;
+						}
 					}
 				}
 			}
@@ -297,7 +334,12 @@ public class Vehicle {
 			for(int x = (int) pos[0]; x>newPosition[0]; x--){
 				for(int y = (int) pos[1]; y>newPosition[1]; y--){
 					if(winkel[x][y]!=null){
-						distance = Math.sqrt(Math.pow(x - pos[0], 2) + Math.pow(y - pos[1], 2));
+						Rectangle2D rect = new Rectangle2D.Double(x, y, 1, 1);
+						if(rect.intersectsLine(collisionRoute)){
+							distance = collisionRoute.ptLineDist(rect.getX(), rect.getY());
+							System.out.println("collison Erorr");
+							break;
+						}
 					}
 				}
 			}
@@ -305,24 +347,31 @@ public class Vehicle {
 			for(int x = (int) pos[0]; x>newPosition[0]; x--){
 				for(int y = (int) pos[1]; y<newPosition[1]; y++){
 					if(winkel[x][y]!=null){
-						distance = Math.sqrt(Math.pow(x - pos[0], 2) + Math.pow(y - pos[1], 2));
+						Rectangle2D rect = new Rectangle2D.Double(x, y, 1, 1);
+						if(rect.intersectsLine(collisionRoute)){
+							distance = collisionRoute.ptLineDist(rect.getX(), rect.getY());
+							System.out.println("collison Erorr");
+							break;
+						}
 
 					}
 				}
 			}
 		}
 
-		if(distance != 0) {
-			vel = Vektorrechnung.normalize(vel);
-			vel[0] = vel[0] * distance;
-			vel[1] = vel[1] * distance;
-		}
+		 */
 
-		pos[0] = pos[0] + vel[0];
-		pos[1] = pos[1] + vel[1];
+		last_pos[0] = pos[0];
+		last_pos[1] = pos[1];
 
-
-
+		if(flag){
+				pos[0] = last_pos[0] + vel[0];
+				pos[1] = last_pos[1] + vel[1];
+			}
+			else{
+				pos[0] = pos[0] + vel[0];
+				pos[1] = pos[1] + vel[1];
+			}
 
 
 		//System.out.println(pos[0] + " : " + pos[1]);

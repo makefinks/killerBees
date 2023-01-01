@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Logger;
@@ -10,7 +12,7 @@ import javax.swing.*;
 public class Simulation extends JFrame {
 	static int sleep = 2; // 8
 	static double pix = 1;// 0.2
-	int anzFz = 100;
+	int anzFz = 10;
 	int anzZiele = 2;
 
 	Logger log = Logger.getLogger("SimLogger");
@@ -22,8 +24,17 @@ public class Simulation extends JFrame {
 	static int width;
 	static int height;
 
-	Simulation(Double[][] winkel, ArrayList<Integer[]> swarmPositions) {
+	Simulation(Double[][] winkel, ArrayList<Integer[]> swarmPositions) throws IOException {
 
+		FileWriter out = new FileWriter("array");
+
+		for (int y = 0; y < winkel.length; y++) {
+			for (int x = 0; x < winkel[y].length; x++) {
+				out.write(String.valueOf(winkel[y][x]));
+				out.write(" ");
+			}
+			out.write("\n");
+		}
 		setSize(1000, 800);
 		width = getWidth();
 		height = getHeight();

@@ -31,9 +31,13 @@ public class CanvasEditor extends JPanel implements MouseListener, KeyListener {
 
         Graphics2D g2d = (Graphics2D) g;
 
+        g2d.setColor(Color.black);
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         //Info display
+        g2d.setColor(Color.white);
         g2d.drawString("draw obstacles:  [hold left-mouse-button]", 0, 10);
         g2d.setColor(Color.RED);
         g2d.drawString("swarm location: [hold shift] + [left-mouse-button]", 0, 20);
@@ -47,7 +51,7 @@ public class CanvasEditor extends JPanel implements MouseListener, KeyListener {
             g2d.drawLine(pos[0]-10, pos[1]+10, pos[0]+10, pos[1]-10);
         }
 
-        g2d.setColor(Color.black);
+        g2d.setColor(Color.white);
         for(int i=0;i< winkel.length;i++){
             for(int j=0;j< winkel[i].length;j++){
                 if(winkel[i][j]!=null){
@@ -88,7 +92,7 @@ public class CanvasEditor extends JPanel implements MouseListener, KeyListener {
 
 
         line = new ArrayList<>();
-        t=new Timer(10,new ActionListener() {
+        t=new Timer(1,new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent a) {
                 Point p=getMousePosition();

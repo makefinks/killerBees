@@ -71,8 +71,13 @@
 
 			Graphics2D g2d = (Graphics2D) g;
 
+			g2d.setColor(Color.black);
+			g2d.fillRect(0,0, width, height);
+
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+
+			g2d.setColor(Color.WHITE);
 				for(int x=0;x<winkel.length; x++){
 					for(int y=0; y<winkel[0].length; y++){
 						if(winkel[x][y] != null){
@@ -92,6 +97,7 @@
 				if(fz.type==1)g2d.setColor(Color.RED);
 				else 		  g2d.setColor(Color.BLACK);
 
+				g2d.setColor(Color.WHITE);
 				g2d.draw(q);
 
 				//g2d.fillOval((int) fz.pos[0], (int) fz.pos[1], 10, 10);
