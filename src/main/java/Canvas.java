@@ -17,6 +17,9 @@
 		double pix;
 		boolean firstDraw;
 
+		static int height;
+		static int width;
+
 
 		Canvas(ArrayList<Vehicle> allVehicles,ArrayList<Target> allTargets, double pix, Double[][] winkel){
 			this.allVehicles = allVehicles;
@@ -34,7 +37,7 @@
 			int    b    = (int)(fz.FZB/pix);
 			int    x    = (int)(fz.pos[0]/pix);
 			int    y    = (int)(fz.pos[1]/pix);
-			int    dia  = (int)(Math.sqrt(Math.pow(l/2, 2)+Math.pow(b/2, 2)));
+			int    dia  = 5 * (int)(Math.sqrt(Math.pow(l/2, 2)+Math.pow(b/2, 2)));
 			double    t = Vektorrechnung.winkel(fz.vel);
 			double phi1 = Math.atan(fz.FZB/fz.FZL);
 			double phi2 = Math.PI-phi1;
@@ -55,27 +58,30 @@
 			return q;
 		}
 
-		@Override
-		public void paint(Graphics g) {
-			System.out.println("Paint called on Canvas");
-			super.paint(g);
-			paintComponent(g);
-		}
+
 
 		@Override
 		public void paintComponent(Graphics g) {
+
+			width = getWidth();
+			height = getHeight();
 			super.paintComponent(g);
 
-			log.info("Canvas paintComponent called");
+			//log.info("Canvas paintComponent called");
 
 			Graphics2D g2d = (Graphics2D) g;
 
+			g2d.setColor(Color.black);
+			g2d.fillRect(0,0, width, height);
+
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+
+			g2d.setColor(Color.WHITE);
 				for(int x=0;x<winkel.length; x++){
 					for(int y=0; y<winkel[0].length; y++){
 						if(winkel[x][y] != null){
-							g2d.drawLine(x,y,x,y);
+							g2d.drawLine((int) (x/pix),(int) (y/pix),(int) (x/pix),(int) (y/pix));
 						}
 					}
 				}
@@ -84,18 +90,26 @@
 				Vehicle fz = allVehicles.get(i);
 				Polygon q = kfzInPolygon(fz);
 
+				//Draw velocity
+				g2d.setColor(Color.BLUE);
+				g2d.drawLine((int) (fz.pos[0]/pix), (int) (fz.pos[1]/pix), (int) ((fz.pos[0] + fz.vel[0])/pix), (int) ((fz.pos[1] + fz.vel[1])/pix));
+
 				if(fz.type==1)g2d.setColor(Color.RED);
 				else 		  g2d.setColor(Color.BLACK);
+
+				g2d.setColor(Color.WHITE);
 				g2d.draw(q);
+
+				//g2d.fillOval((int) fz.pos[0], (int) fz.pos[1], 10, 10);
 
 				int    x  = (int)(fz.pos[0]/pix);
 				int    y  = (int)(fz.pos[1]/pix);
 
 				if(fz.type==1){
 					int seite = (int)(fz.rad_zus/pix);
-					g2d.drawOval(x-seite, y-seite, 2*seite, 2*seite);
+					//g2d.drawOval(x-seite, y-seite, 2*seite, 2*seite);
 					seite = (int)(fz.rad_sep/pix);
-					g2d.drawOval(x-seite, y-seite, 2*seite, 2*seite);
+					//g2d.drawOval(x-seite, y-seite, 2*seite, 2*seite);
 
 				}
 			}
