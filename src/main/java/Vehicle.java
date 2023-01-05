@@ -15,6 +15,7 @@ public class Vehicle {
 	double[] pos; // Position
 
 	double[] last_pos;
+	int lastCount;
 	double[] vel; // Geschwindigkeit
 	final double max_acc; // Maximale Beschleunigung
 	final double max_vel; // Maximale Geschwindigkeit
@@ -39,6 +40,7 @@ public class Vehicle {
 		pos = new double[2];
 		vel = new double[2];
 		last_pos = new double[2];
+		lastCount = 0;
 
 		//generate random pos based on swarmPositions
 		Random rand = new Random();
@@ -291,7 +293,7 @@ public class Vehicle {
 
 
 
-		/*
+
 		//check if the new position would result in another wall being passed and reduce the velocity so it does not pass the wall
 		double[] newPosition = new double[]{pos[0]+vel[0], pos[1]+vel[1]};
 
@@ -306,8 +308,9 @@ public class Vehicle {
 					if(winkel[x][y]!=null){
 						Rectangle2D rect = new Rectangle2D.Double(x, y, 1, 1);
 						if(rect.intersectsLine(collisionRoute)){
-							distance = collisionRoute.ptLineDist(rect.getX(), rect.getY());
-							System.out.println("collison Erorr");
+							distance = collisionRoute.ptLineDist(x, y);
+							collisionError = true;
+							System.out.println(distance);
 							break;
 						}
 					}
@@ -321,8 +324,8 @@ public class Vehicle {
 						//distance = Math.sqrt(Math.pow(x - pos[0], 2) + Math.pow(y - pos[1], 2));
 						Rectangle2D rect = new Rectangle2D.Double(x, y, 1, 1);
 						if(rect.intersectsLine(collisionRoute)){
-							distance = collisionRoute.ptLineDist(rect.getX(), rect.getY());
-							System.out.println("collison Erorr");
+							distance = collisionRoute.ptLineDist(x, y);
+							collisionError = true;
 							break;
 						}
 					}
@@ -336,8 +339,8 @@ public class Vehicle {
 					if(winkel[x][y]!=null){
 						Rectangle2D rect = new Rectangle2D.Double(x, y, 1, 1);
 						if(rect.intersectsLine(collisionRoute)){
-							distance = collisionRoute.ptLineDist(rect.getX(), rect.getY());
-							System.out.println("collison Erorr");
+							distance = collisionRoute.ptLineDist(x, y);
+							collisionError = true;
 							break;
 						}
 					}
@@ -349,8 +352,8 @@ public class Vehicle {
 					if(winkel[x][y]!=null){
 						Rectangle2D rect = new Rectangle2D.Double(x, y, 1, 1);
 						if(rect.intersectsLine(collisionRoute)){
-							distance = collisionRoute.ptLineDist(rect.getX(), rect.getY());
-							System.out.println("collison Erorr");
+							distance = collisionRoute.ptLineDist(x, y);
+							collisionError = true;
 							break;
 						}
 
@@ -359,20 +362,48 @@ public class Vehicle {
 			}
 		}
 
-		 */
 
-		last_pos[0] = pos[0];
-		last_pos[1] = pos[1];
+
 
 		if(flag){
+				vel = Vektorrechnung.normalize(vel);
+				vel[0] = vel[0] / 100000;
+				vel[1] = vel[1] / 100000;
 				pos[0] = last_pos[0] + vel[0];
 				pos[1] = last_pos[1] + vel[1];
-			}
-			else{
+		}else{
+			pos[0] = pos[0] + vel[0];
+			pos[1] = pos[1] + vel[1];
+		}
+
+		lastCount++;
+		if(lastCount == 20){
+			last_pos[0] = pos[0];
+			last_pos[1] = pos[1];
+			lastCount = 0;
+		}
+
+
+
+		/*
+		if(flag){
+			if(distance != 0.0){
+				vel = Vektorrechnung.normalize(vel);
+				vel[0] = vel[0] * (distance - distance / 2);
+				vel[1] = vel[1] * (distance - distance / 2);
+				pos[0] = last_pos[0] + vel[0];
+				pos[1] = last_pos[1] + vel[1];
+
+			}else{
 				pos[0] = pos[0] + vel[0];
 				pos[1] = pos[1] + vel[1];
 			}
+		}else{
+			pos[0] = pos[0] + vel[0];
+			pos[1] = pos[1] + vel[1];
+		}
 
+		 */
 
 		//System.out.println(pos[0] + " : " + pos[1]);
 		position_Umgebung_anpassen_Box();
@@ -398,7 +429,6 @@ public class Vehicle {
 	}
 	
 
-	
 	double[] folgen(ArrayList<Vehicle> all) {
 		double[] pos_dest = new double[2];
 		double[] vel_dest = new double[2];

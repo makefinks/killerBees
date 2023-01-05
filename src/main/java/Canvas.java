@@ -91,7 +91,7 @@
 				Polygon q = kfzInPolygon(fz);
 
 				//Draw velocity
-				g2d.setColor(Color.BLUE);
+				g2d.setColor(Color.YELLOW);
 				g2d.drawLine((int) (fz.pos[0]/pix), (int) (fz.pos[1]/pix), (int) ((fz.pos[0] + fz.vel[0])/pix), (int) ((fz.pos[1] + fz.vel[1])/pix));
 
 				if(fz.type==1)g2d.setColor(Color.RED);
