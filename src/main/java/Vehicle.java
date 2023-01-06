@@ -29,8 +29,8 @@ public class Vehicle {
 		this.swarmPositions = swarmPositions;
 		allId++;
 		this.id = allId;
-		this.FZL = 2;
-		this.FZB = 1;
+		this.FZL = 4; //2
+		this.FZB = 4; //1
 		this.rad_sep = 7;// 50
 		this.rad_zus = 25;// 25
 		this.type = 0;
@@ -250,8 +250,8 @@ public class Vehicle {
 
 		Line2D velocityPath = new Line2D.Double(pos[0], pos[1], newPoint[0], newPoint[1]);
 
-		int dx=4;
-		int dy=4;
+		int dx=50;
+		int dy=50;
 
 		int startX=0;
 		int startY=0;
@@ -266,9 +266,9 @@ public class Vehicle {
 			startY=(int) newPoint[1];
 		}
 		boolean flag=false;
-		for(int x=startX;x<startX+dx&&x<winkel.length;x++){
+		for(int x = startX; x < startX + dx && x < winkel.length; x++){ //+dx
 
-			for(int y=startY;y<startY+dy&&y<winkel[x].length;y++){
+			for(int y = startY; y < startY + dy && y < winkel[x].length; y++){ //+dy
 
 				if(winkel[x][y]!=null){
 
@@ -303,14 +303,14 @@ public class Vehicle {
 		boolean collisionError = false;
 		//unten links
 		if(newPosition[0] > pos[0] && newPosition[1] > pos[0]){
-			for(int x = (int) pos[0]; x<newPosition[0]; x++){
-				for(int y = (int) pos[1]; y<newPosition[1]; y++){
+			for(int x = (int) pos[0]; x<=newPosition[0]; x++){ //kleiner gleich damit wand dabei
+				for(int y = (int) pos[1]; y<=newPosition[1]; y++){
 					if(winkel[x][y]!=null){
 						Rectangle2D rect = new Rectangle2D.Double(x, y, 1, 1);
 						if(rect.intersectsLine(collisionRoute)){
 							distance = collisionRoute.ptLineDist(x, y);
 							collisionError = true;
-							System.out.println(distance);
+							//System.out.println(distance);
 							break;
 						}
 					}
@@ -318,8 +318,8 @@ public class Vehicle {
 			}
 			//oben rechts
 		} else if (newPosition[0] > pos[0] && newPosition[1] < pos[1]) {
-			for(int x = (int) pos[0]; x<newPosition[0]; x++){
-				for(int y = (int) pos[1]; y>newPosition[1]; y--){
+			for(int x = (int) pos[0]; x<=newPosition[0] - 2; x++){ //-2 da sonst rechte wand out of bounds
+				for(int y = (int) pos[1]; y>=newPosition[1]; y--){
 					if(winkel[x][y]!=null){
 						//distance = Math.sqrt(Math.pow(x - pos[0], 2) + Math.pow(y - pos[1], 2));
 						Rectangle2D rect = new Rectangle2D.Double(x, y, 1, 1);
@@ -334,8 +334,8 @@ public class Vehicle {
 		}
 		//oben links
 		else if (newPosition[0] < pos[0] && newPosition[1] < pos[1]) {
-			for(int x = (int) pos[0]; x>newPosition[0]; x--){
-				for(int y = (int) pos[1]; y>newPosition[1]; y--){
+			for(int x = (int) pos[0]; x>=newPosition[0]; x--){
+				for(int y = (int) pos[1]; y>=newPosition[1]; y--){
 					if(winkel[x][y]!=null){
 						Rectangle2D rect = new Rectangle2D.Double(x, y, 1, 1);
 						if(rect.intersectsLine(collisionRoute)){
@@ -347,8 +347,8 @@ public class Vehicle {
 				}
 			}
 		}else if (newPosition[0] < pos[0] && newPosition[1] > pos[1]) {
-			for(int x = (int) pos[0]; x>newPosition[0]; x--){
-				for(int y = (int) pos[1]; y<newPosition[1]; y++){
+			for(int x = (int) pos[0]; x>=newPosition[0]; x--){
+				for(int y = (int) pos[1]; y<=newPosition[1]; y++){
 					if(winkel[x][y]!=null){
 						Rectangle2D rect = new Rectangle2D.Double(x, y, 1, 1);
 						if(rect.intersectsLine(collisionRoute)){
@@ -361,8 +361,27 @@ public class Vehicle {
 				}
 			}
 		}
+		if (distance < 0.09 && distance > 0) System.out.println(distance);
 
+/*
+		if(flag){
+			vel = Vektorrechnung.normalize(vel);
+			vel[0] = vel[0] * (distance / 1000);
+			vel[1] = vel[1] * (distance / 1000);
+			pos[0] = last_pos[0] + vel[0];
+			pos[1] = last_pos[1] + vel[1];
+		}else{
+			pos[0] = pos[0] + vel[0];
+			pos[1] = pos[1] + vel[1];
+		}
 
+		//lastCount++;
+		//if(lastCount == 20){
+			last_pos[0] = pos[0];
+			last_pos[1] = pos[1];
+			//lastCount = 0;
+		//}
+		*/
 
 
 		if(flag){
@@ -382,6 +401,7 @@ public class Vehicle {
 			last_pos[1] = pos[1];
 			lastCount = 0;
 		}
+
 
 
 
