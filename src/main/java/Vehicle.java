@@ -15,6 +15,7 @@ public class Vehicle {
 	double[] pos; // Position
 
 	double[] last_pos;
+	double[] last_vel;
 	int lastCount;
 	double[] vel; // Geschwindigkeit
 	final double max_acc; // Maximale Beschleunigung
@@ -29,8 +30,8 @@ public class Vehicle {
 		this.swarmPositions = swarmPositions;
 		allId++;
 		this.id = allId;
-		this.FZL = 4; //2
-		this.FZB = 4; //1
+		this.FZL = 2; //2
+		this.FZB = 1; //1
 		this.rad_sep = 7;// 50
 		this.rad_zus = 25;// 25
 		this.type = 0;
@@ -40,6 +41,7 @@ public class Vehicle {
 		pos = new double[2];
 		vel = new double[2];
 		last_pos = new double[2];
+		last_vel = new double[2];
 		lastCount = 0;
 
 		//generate random pos based on swarmPositions
@@ -399,6 +401,8 @@ public class Vehicle {
 		if(lastCount == 20){
 			last_pos[0] = pos[0];
 			last_pos[1] = pos[1];
+			last_vel[0] = velCopy[0];
+			last_vel[1] = velCopy[1];
 			lastCount = 0;
 		}
 

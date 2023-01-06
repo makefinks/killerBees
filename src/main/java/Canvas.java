@@ -61,6 +61,34 @@
 			return q;
 		}
 
+		public Polygon kfzInPolygonLast(Vehicle fz){
+			Polygon   q = new Polygon();
+			int    l    = (int)(fz.FZL/pix);
+			int    b    = (int)(fz.FZB/pix);
+			int    x    = (int)(fz.last_pos[0]/pix);
+			int    y    = (int)(fz.last_pos[1]/pix);
+			int    dia  = 5 * (int)(Math.sqrt(Math.pow(l/2, 2)+Math.pow(b/2, 2)));
+			double    t = Vektorrechnung.winkel(fz.last_vel);
+			double phi1 = Math.atan(fz.FZB/fz.FZL);
+			double phi2 = Math.PI-phi1;
+			double phi3 = Math.PI+phi1;
+			double phi4 = 2*Math.PI-phi1;
+			int      x1 = (int)(x+(dia*Math.cos(t+  phi1)));
+			int      y1 = (int)(y+(dia*Math.sin(t+  phi1)));
+			int      x2 = (int)(x+(dia*Math.cos(t+  phi2)));
+			int      y2 = (int)(y+(dia*Math.sin(t+  phi2)));
+			int      x3 = (int)(x+(dia*Math.cos(t+  phi3)));
+			int      y3 = (int)(y+(dia*Math.sin(t+  phi3)));
+			int      x4 = (int)(x+(dia*Math.cos(t+  phi4)));
+			int      y4 = (int)(y+(dia*Math.sin(t+  phi4)));
+			q.addPoint(x1, y1);
+			q.addPoint(x2, y2);
+			q.addPoint(x3, y3);
+			q.addPoint(x4, y4);
+			return q;
+		}
+
+
 		public Polygon kfzInPolygon(double fzl, double fzb, double posX, double posY, double[] vel){
 			Polygon   q = new Polygon();
 			int    l    = (int)(fzl/pix);
@@ -120,13 +148,16 @@
 			for(int i=0;i<allVehicles.size();i++){
 				Vehicle fz = allVehicles.get(i);
 				Polygon q = kfzInPolygon(fz);
+				Polygon q_last = kfzInPolygonLast(fz);
 
-				last_pos_list.add(kfzInPolygon(fz.FZL, fz.FZB, fz.pos[0], fz.pos[1], fz.vel));
+				g2d.setColor(Color.GRAY);
+				g2d.draw(q_last);
+				//last_pos_list.add(kfzInPolygon(fz.FZL, fz.FZB, fz.pos[0], fz.pos[1], fz.vel));
 
-				if (count_last_pos > 5) {
-					g2d.setColor(Color.GRAY);
-					g2d.draw(last_pos_list.poll());
-				}
+				//if (count_last_pos > 5) {
+				//	g2d.setColor(Color.GRAY);
+				//	g2d.draw(last_pos_list.poll());
+				//}
 
 
 
