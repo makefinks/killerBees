@@ -1,8 +1,6 @@
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 public class Vehicle {
 	static int allId = 0;
@@ -15,6 +13,7 @@ public class Vehicle {
 	double[] pos; // Position
 
 	double[] last_pos;
+	Queue<Double[]> last_pos_list = new LinkedList<>();
 	double[] last_vel;
 	int lastCount;
 	double[] vel; // Geschwindigkeit
@@ -252,8 +251,8 @@ public class Vehicle {
 
 		Line2D velocityPath = new Line2D.Double(pos[0], pos[1], newPoint[0], newPoint[1]);
 
-		int dx=50;
-		int dy=50;
+		int dx=4;
+		int dy=4;
 
 		int startX=0;
 		int startY=0;
@@ -396,15 +395,24 @@ public class Vehicle {
 			pos[0] = pos[0] + vel[0];
 			pos[1] = pos[1] + vel[1];
 		}
-
+		if (last_pos_list.size() == 20) {
+			Double[] temp = last_pos_list.poll();
+			last_pos[0] = temp[0];
+			last_pos[1] = temp[1];
+			last_vel[0] = temp[2];
+			last_vel[1] = temp[3];
+		}
+		last_pos_list.add(new Double[] {pos[0], pos[1], vel[0], vel[1]});
+		/*
 		lastCount++;
-		if(lastCount == 20){
+		if(lastCount == 20){ //20
 			last_pos[0] = pos[0];
 			last_pos[1] = pos[1];
 			last_vel[0] = velCopy[0];
 			last_vel[1] = velCopy[1];
 			lastCount = 0;
 		}
+		*/
 
 
 

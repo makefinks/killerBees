@@ -10,9 +10,9 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 public class Simulation extends JFrame {
-	static int sleep = 100; // 8
+	static int sleep = 5; // 8
 	static double pix = 1;// 0.2
-	int anzFz = 1;
+	int anzFz = 50;
 	int anzZiele = 2;
 
 	Logger log = Logger.getLogger("SimLogger");
