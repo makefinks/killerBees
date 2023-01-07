@@ -8,11 +8,13 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class Simulation extends JFrame {
-	static int sleep = 5; // 8
+	static int sleep = 2; // 8
 	static double pix = 1;// 0.2
-	int anzFz = 50;
+	int anzFz = 100;
 	int anzZiele = 2;
 
 	Logger log = Logger.getLogger("SimLogger");
@@ -62,9 +64,35 @@ public class Simulation extends JFrame {
 
 		canvas = new Canvas(allVehicles, allTargets, pix, winkel);
 
+		JPanel controlsPanel = new JPanel();
+		controlsPanel.setLayout(new FlowLayout());
+		controlsPanel.setBackground(Color.black);
+
+		JSlider speedSlider = new JSlider(JSlider.HORIZONTAL, 100);
+		JLabel sliderLabel = new JLabel("Speed");
+		sliderLabel.setForeground(Color.ORANGE);
+		speedSlider.setValue( speedSlider.getMaximum() - sleep);
+		JLabel speedLabel = new JLabel(String.valueOf(speedSlider.getMaximum() - sleep));
+		speedLabel.setForeground(Color.ORANGE);
+
+		controlsPanel.add(sliderLabel);
+		controlsPanel.add(speedSlider);
+		controlsPanel.add(speedLabel);
+
+		add(controlsPanel, BorderLayout.NORTH);
 		add(canvas, BorderLayout.CENTER);
 		validate();
 		setVisible(true);
+
+
+		speedSlider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				sleep = speedSlider.getMaximum() - speedSlider.getValue();
+				speedLabel.setText(String.valueOf(speedSlider.getValue()));
+			}
+		});
+
 	}
 
 	public void run() {
