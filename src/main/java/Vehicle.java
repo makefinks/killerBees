@@ -251,46 +251,24 @@ public class Vehicle {
 
 		Line2D velocityPath = new Line2D.Double(pos[0], pos[1], newPoint[0], newPoint[1]);
 
-		int dx=4;
-		int dy=4;
 
-		int startX=0;
-		int startY=0;
-		if(pos[0]<newPoint[0]){
-			startX=(int)pos[0];
-		}else{
-			startX=(int) newPoint[0];
-		}
-		if(pos[1]<newPoint[1]){
-			startY=(int)pos[1];
-		}else{
-			startY=(int) newPoint[1];
-		}
+		// Collsisions pruefung und änderung der richtung
+
 		boolean flag=false;
-		for(int x = startX; x < startX + dx && x < winkel.length; x++){ //+dx
+		Double angleWall = angleInRect((int)pos[0],(int)pos[1],(int)newPoint[0],(int)newPoint[1]);
+		if(angleWall!=null){
+			double speed=Math.sqrt(vel[0]*vel[0]+vel[1]*vel[1]);
+			double angleVehicle = Math.atan2(pos[1]-newPoint[1], pos[0]-newPoint[0]);
 
-			for(int y = startY; y < startY + dy && y < winkel[x].length; y++){ //+dy
 
-				if(winkel[x][y]!=null){
+			angleVehicle=angleWall-(angleVehicle-angleWall);
 
-					Rectangle2D rect = new Rectangle2D.Double(x,y, 1, 1);
-
-					if(rect.intersectsLine(velocityPath)){
-						//System.out.println("Collision");
-						double speed=Math.sqrt(vel[0]*vel[0]+vel[1]*vel[1]);
-						double angle = Math.atan2(pos[1]-newPoint[1], pos[0]-newPoint[0]);
-
-						angle=winkel[x][y]-(angle-winkel[x][y]);
-
-						//System.out.println(angle);
-						vel[0]=Math.cos(angle)*speed;
-						vel[1]=Math.sin(angle)*speed;
-						flag = true;
-						break;
-					}
-				}
-			}
+			//System.out.println(angleVehicle);
+			vel[0]=Math.cos(angleVehicle)*speed;
+			vel[1]=Math.sin(angleVehicle)*speed;
+			flag = true;
 		}
+
 
 
 
@@ -439,6 +417,32 @@ public class Vehicle {
 
 		//System.out.println(pos[0] + " : " + pos[1]);
 		position_Umgebung_anpassen_Box();
+	}
+	private Double angleInRect(int x1,int y1, int x2,int y2){
+		int dx=4;
+		int dy=4;
+
+		int startX=0;
+		int startY=0;
+		if(x1<x2){
+			startX=x1;
+		}else{
+			startX=x2;
+		}
+		if(y1<y2){
+			startY=y1;
+		}else{
+			startY=y2;
+		}
+		for(int x = startX; x < startX + dx && x < winkel.length; x++) { //+dx
+
+			for (int y = startY; y < startY + dy && y < winkel[x].length; y++) { //+dy
+				if(winkel[x][y]!=null){
+					return winkel[x][y];
+				}
+			}
+		}
+		return null;
 	}
 
 	public void position_Umgebung_anpassen_Box() {
