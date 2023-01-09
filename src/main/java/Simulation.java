@@ -16,6 +16,7 @@ public class Simulation extends JFrame {
 	static double pix = 1;// 0.2
 	int anzFz = 50;
 	int anzZiele = 2;
+	int anzToDestroy = 3;
 
 	Logger log = Logger.getLogger("SimLogger");
 	ArrayList<Vehicle> allVehicles = new ArrayList<Vehicle>();
@@ -26,8 +27,9 @@ public class Simulation extends JFrame {
 	static int width;
 	static int height;
 
-	Simulation(Double[][] winkel, ArrayList<Integer[]> swarmPositions) throws IOException {
-
+	Simulation(Double[][] winkel, ArrayList<Integer[]> swarmPositions, int anzFz, int anzToDestroy) throws IOException {
+		this.anzFz = anzFz;
+		this.anzToDestroy = anzToDestroy;
 		FileWriter out = new FileWriter("array");
 
 		for (int y = 0; y < winkel.length; y++) {
