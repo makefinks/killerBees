@@ -81,6 +81,7 @@ public class CanvasEditor extends JPanel implements MouseListener, KeyListener {
     @Override
     public void mouseClicked(MouseEvent e) {
 
+
         if(e.isShiftDown()){
             swarmPositions.add(new Integer[]{e.getX(), e.getY()});
         }
