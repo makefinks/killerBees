@@ -17,6 +17,8 @@ public class Simulation extends JFrame {
 	int anzFz = 50;
 	int anzZiele = 2;
 
+	boolean pause=false;
+
 	Logger log = Logger.getLogger("SimLogger");
 	ArrayList<Vehicle> allVehicles = new ArrayList<Vehicle>();
 	ArrayList<Target> allTargets = new ArrayList<Target>();
@@ -79,6 +81,10 @@ public class Simulation extends JFrame {
 		currSpeedLabel.setText(String.valueOf(speedSlider.getValue()));
 		currSpeedLabel.setForeground(Color.WHITE);
 
+		JButton pauseButton = new JButton("Pause");
+		pauseButton.addActionListener((e)-> pause= !pause);
+
+		controlsPanel.add(pauseButton);
 		controlsPanel.add(speedLabel);
 		controlsPanel.add(speedSlider);
 		controlsPanel.add(currSpeedLabel);
@@ -106,30 +112,32 @@ public class Simulation extends JFrame {
 
 			while (true) {
 
-				//log.info("sim running...");
+				if(!pause) {
+					//log.info("sim running...");
 
-				//Move all Vehicles on update
-				for (int i = 0; i < allVehicles.size(); i++) {
-					v = allVehicles.get(i);
-					v.steuern(allVehicles);
-					//System.out.println(v.pos[0]);
-					//System.out.println(v.pos[0]);
-				}
+					//Move all Vehicles on update
+					for (int i = 0; i < allVehicles.size(); i++) {
+						v = allVehicles.get(i);
+						v.steuern(allVehicles);
+						//System.out.println(v.pos[0]);
+						//System.out.println(v.pos[0]);
+					}
 
-				//Move all Targets on update
-				for(Target t : allTargets){
-					t.move();
-				}
+					//Move all Targets on update
+					for (Target t : allTargets) {
+						t.move();
+					}
 
-				// Update the graphics on the canvas and redraw it
-				canvas.repaint();
+					// Update the graphics on the canvas and redraw it
+					canvas.repaint();
 
-				// Update the graphics on the window and redraw it
-				repaint();
+					// Update the graphics on the window and redraw it
+					repaint();
 
-				try {
-					Thread.sleep(sleep);
-				} catch (InterruptedException e) {
+					try {
+						Thread.sleep(sleep);
+					} catch (InterruptedException e) {
+					}
 				}
 			}
 		});
