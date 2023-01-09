@@ -8,7 +8,7 @@ public class EditorFrame extends JFrame {
 
 
     private CanvasEditor canvasEditor;
-     private JTextField inputNrOfVehicles;
+    private JTextField inputNrOfVehicles;
     private JTextField inputNrToDestroy;
 
     private JButton btnRun;
@@ -55,9 +55,8 @@ public class EditorFrame extends JFrame {
                 this.dispose();
                 Simulation xx = null;
                 try {
-                    xx = new Simulation(this.canvasEditor.getWinkel(), this.canvasEditor.getSwarmPositions());
-                    xx.setAnzFz(nrOfVehicles);
-                    xx.setAnzToDestroy(nrToDestroy);
+                    xx = new Simulation(this.canvasEditor.getWinkel(), this.canvasEditor.getSwarmPositions(),
+                            nrOfVehicles, nrToDestroy);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
