@@ -137,4 +137,8 @@ public class Simulation extends JFrame {
 		thread.start();
 
 	}
+
+	public void setAnzFz(int anzFz) {
+		this.anzFz = anzFz;
+	}
 }
