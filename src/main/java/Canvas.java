@@ -136,12 +136,17 @@
 
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-
+			int count=0;
 			g2d.setColor(Color.WHITE);
 				for(int x=0;x<winkel.length; x++){
 					for(int y=0; y<winkel[0].length; y++){
 						if(winkel[x][y] != null){
+							count++;
+
 							g2d.drawLine((int) (x/pix),(int) (y/pix),(int) (x/pix),(int) (y/pix));
+
+
+
 						}
 					}
 				}

@@ -104,7 +104,7 @@ public class CanvasEditor extends JPanel implements MouseListener,KeyListener{
 
 
         line = new ArrayList<>();
-        t = new Timer(1, new ActionListener() {
+        t = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent a) {
                 Point p = getMousePosition();
@@ -130,10 +130,9 @@ public class CanvasEditor extends JPanel implements MouseListener,KeyListener{
         int lastI = 0;
         for (int i = 1; i < line.size(); i++) {
             //winkel berechnug
-            double angle = Math.atan2(line.get(i).x - befor.x, line.get(i).y - befor.y);
+            double angle = Math.atan2(line.get(i).y - befor.y, line.get(i).x - befor.x);
 
             zeichneLinie(line.get(i), befor, angle);
-
 
             befor = line.get(i);
 
@@ -142,8 +141,7 @@ public class CanvasEditor extends JPanel implements MouseListener,KeyListener{
     }
 
     private void zeichneLinie(Point a, Point b, Double angle) {
-        winkel[a.x][a.y] = 100.0;
-        winkel[b.x][b.y] = 100.0;
+
 
         int dx = b.x - a.x;
         int dy = b.y - a.y;
@@ -152,7 +150,10 @@ public class CanvasEditor extends JPanel implements MouseListener,KeyListener{
         double rx = dx / bertrag;
         double ry = dy / bertrag;
         while (Math.abs(x) < Math.abs(dx) || Math.abs(y) < Math.abs(dy)) {
-            winkel[(int) (x + a.x)][(int) (y + a.y)] = angle;
+            winkel[(int) (x + a.x)][(int) (y + a.y)] = angle%Math.PI;
+            winkel[(int) (x + a.x+1)][(int) (y + a.y)] = angle%Math.PI;
+            winkel[(int) (x + a.x)][(int) (y + a.y+1)] = angle%Math.PI;
+            winkel[(int) (x + a.x+1)][(int) (y + a.y+1)] = angle%Math.PI;
             x += rx;
             y += ry;
         }
