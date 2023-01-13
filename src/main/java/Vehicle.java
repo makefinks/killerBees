@@ -1,3 +1,7 @@
+import winkelTest.Line;
+import winkelTest.WinkelDarstellung;
+
+import javax.swing.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -22,6 +26,23 @@ public class Vehicle {
     final double max_vel; // Maximale Geschwindigkeit
 
     Double[][] winkel;
+
+    private static final double MIN_ANGLE=0.3;
+
+    static WinkelDarstellung winkelframe;
+
+    static{
+        JFrame jf = new JFrame();
+        winkelframe = new WinkelDarstellung();
+        jf.setLayout(null);
+        jf.setSize(500 + 18, 400 + 38);
+        jf.setFocusable(false);
+        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jf.setLocationRelativeTo(null);
+        jf.add(winkelframe);
+        winkelframe.setVisible(true);
+        jf.setVisible(true);
+    }
 
     ArrayList<Integer[]> swarmPositions = new ArrayList<>();
 
@@ -53,6 +74,7 @@ public class Vehicle {
         pos[1] = swarmPositions.get(posFromIndex)[1] + Simulation.pix * 50 * Math.random();
         vel[0] = max_vel * Math.random();
         vel[1] = max_vel * Math.random();
+
     }
 
     ArrayList<Vehicle> nachbarErmitteln(ArrayList<Vehicle> all, double radius1, double radius2) {
@@ -238,23 +260,31 @@ public class Vehicle {
        Double angleWall = angleInRect( x1,y1,  x2,  y2);
        //aktuelle position
         //Double angleWall = winkel[(int)x1][(int)y1];
-        if (angleWall != null) {
+        if (angleWall != null&&!lastColision) {
             lastColision=true;
             double speed = Math.sqrt(vel[0] * vel[0] + vel[1] * vel[1]);
-            double angleVehicle =Math.atan2(pos[1] - y2, pos[0] - x2);
+            double angleVehicle =Math.atan2(y2-pos[1], x2-pos[0]);
            // System.out.println("alter Winkel"+(int)Math.toDegrees(angleVehicle));
-            angleVehicle = (angleWall - (angleVehicle - angleWall));
-           // System.out.println("Winkel Wand"+(int)Math.toDegrees(angleWall));
+
+            winkelframe.setLine(Line.LineOfAngle((int)Math.toDegrees(angleVehicle)));
+            winkelframe.setMirror(Line.LineOfAngle((int)Math.toDegrees(angleWall)));
+            double angleDiff= (angleVehicle - angleWall);
+            if(Math.abs(angleDiff)<MIN_ANGLE){
+              //  angleDiff=MIN_ANGLE;
+            }
+            angleVehicle = (angleWall - angleDiff);
+            // System.out.println("Winkel Wand"+(int)Math.toDegrees(angleWall));
             //System.out.println("Neuer Winkel"+(int)Math.toDegrees(angleVehicle));
-           // vel[0] = Math.cos(angleVehicle);
-            //vel[1] = Math.sin(angleVehicle);
+            vel[0] = Math.cos(angleVehicle);
+            vel[1] = Math.sin(angleVehicle);
           //vel[0]=-vel[0];
            // vel[1]=+vel[1];
-            vel[0]=Math.cos(2*angleWall)*vel[0]+Math.sin(2*angleWall)*vel[1];
-            vel[1]=-Math.cos(2*angleWall)*vel[1]+Math.sin(2*angleWall)*vel[0];
+           // vel[0]=Math.cos(2*angleWall)*vel[0]+Math.sin(2*angleWall)*vel[1];
+           // vel[1]=-Math.cos(2*angleWall)*vel[1]+Math.sin(2*angleWall)*vel[0];
             speed = Math.sqrt(vel[0] * vel[0] + vel[1] * vel[1]);
             System.out.println("Collision"+System.currentTimeMillis());
-
+            pos[0]=last_pos[0];
+            pos[1]=last_pos[1];
 
 
         } else {
@@ -270,6 +300,8 @@ public class Vehicle {
 
 
         }
+        last_pos[0]=pos[0];
+        last_pos[1]=pos[1];
         pos[0] = pos[0] + vel[0];
         pos[1] = pos[1] + vel[1];
 
@@ -277,8 +309,8 @@ public class Vehicle {
     }
 
     private Double angleInRect(double x1, double y1,double x2, double y2) {
-        int dx = 1;
-        int dy = 1;
+        int dx = 2;
+        int dy = 2;
         Line2D line = new Line2D.Double(x1, y1, x2, y2);
         int startX = 0;
         int startY = 0;
@@ -293,10 +325,10 @@ public class Vehicle {
             startY =(int) y2;
         }
 
-        for (int x = startX; x < startX + dx && x < winkel.length; x++) { //+dx
+        for (int x = startX; x>0&&x < startX + dx && x < winkel.length; x++) { //+dx
 
-            for (int y = startY; y < startY + dy && y < winkel[x].length; y++) { //+dy
-                if (winkel[x][y] != null) {
+            for (int y = startY; y>0&&y < startY + dy && y < winkel[x].length; y++) { //+dy
+                if (winkel[x][y] != null&&x!=startX&&y!=startY) {
 
                     return winkel[x][y];
                 }
