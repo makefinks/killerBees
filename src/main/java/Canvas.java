@@ -142,12 +142,9 @@
 					for(int y=0; y<winkel[0].length; y++){
 						if(winkel[x][y] != null){
 							count++;
-							g2d.setColor(Color.RED);
+
 							g2d.drawLine((int) (x/pix),(int) (y/pix),(int) (x/pix),(int) (y/pix));
-							if(count%50==1){
-								g.setColor(Color.GREEN);
-								g2d.drawString(String.valueOf(  (int)Math.toDegrees(winkel[x][y]) ),x,y);
-							}
+
 
 
 						}

@@ -1,6 +1,3 @@
-import winkelTest.Line;
-import winkelTest.WinkelDarstellung;
-
 import javax.swing.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -18,7 +15,7 @@ public class Vehicle {
     double[] pos; // Position
 
     double[] last_pos;
-    Queue<Double[]> last_pos_list = new LinkedList<>();
+
     double[] last_vel;
     int lastCount;
     double[] vel; // Geschwindigkeit
@@ -26,23 +23,6 @@ public class Vehicle {
     final double max_vel; // Maximale Geschwindigkeit
 
     Double[][] winkel;
-
-    private static final double MIN_ANGLE=0.3;
-
-    static WinkelDarstellung winkelframe;
-
-    static{
-        JFrame jf = new JFrame();
-        winkelframe = new WinkelDarstellung();
-        jf.setLayout(null);
-        jf.setSize(500 + 18, 400 + 38);
-        jf.setFocusable(false);
-        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jf.setLocationRelativeTo(null);
-        jf.add(winkelframe);
-        winkelframe.setVisible(true);
-        jf.setVisible(true);
-    }
 
     ArrayList<Integer[]> swarmPositions = new ArrayList<>();
 
@@ -252,37 +232,26 @@ public class Vehicle {
         double y1 = pos[1];
         double x2 = x1 + vel[0];
         double y2 = y1 + vel[1];
-        Line2D velocityVector = new Line2D.Double(x1, y1, x2, y2);
+
 
 
         // Collsisions pruefung und änderung der richtung
         //fläche vor dem vehikel
        Double angleWall = angleInRect( x1,y1,  x2,  y2);
        //aktuelle position
-        //Double angleWall = winkel[(int)x1][(int)y1];
+
         if (angleWall != null&&!lastColision) {
             lastColision=true;
-            double speed = Math.sqrt(vel[0] * vel[0] + vel[1] * vel[1]);
-            double angleVehicle =Math.atan2(y2-pos[1], x2-pos[0]);
-           // System.out.println("alter Winkel"+(int)Math.toDegrees(angleVehicle));
 
-            winkelframe.setLine(Line.LineOfAngle((int)Math.toDegrees(angleVehicle)));
-            winkelframe.setMirror(Line.LineOfAngle((int)Math.toDegrees(angleWall)));
+            double angleVehicle =Math.atan2(y2-pos[1], x2-pos[0]);
+
             double angleDiff= (angleVehicle - angleWall);
-            if(Math.abs(angleDiff)<MIN_ANGLE){
-              //  angleDiff=MIN_ANGLE;
-            }
+
             angleVehicle = (angleWall - angleDiff);
-            // System.out.println("Winkel Wand"+(int)Math.toDegrees(angleWall));
-            //System.out.println("Neuer Winkel"+(int)Math.toDegrees(angleVehicle));
+
             vel[0] = Math.cos(angleVehicle);
             vel[1] = Math.sin(angleVehicle);
-          //vel[0]=-vel[0];
-           // vel[1]=+vel[1];
-           // vel[0]=Math.cos(2*angleWall)*vel[0]+Math.sin(2*angleWall)*vel[1];
-           // vel[1]=-Math.cos(2*angleWall)*vel[1]+Math.sin(2*angleWall)*vel[0];
-            speed = Math.sqrt(vel[0] * vel[0] + vel[1] * vel[1]);
-            System.out.println("Collision"+System.currentTimeMillis());
+
             pos[0]=last_pos[0];
             pos[1]=last_pos[1];
 
