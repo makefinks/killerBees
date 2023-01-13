@@ -12,10 +12,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class Simulation extends JFrame {
-	static int sleep = 2; // 8
+	static int sleep = 5; // 8
 	static double pix = 1;// 0.2
-	int anzFz = 100;
+	int anzFz = 50;
 	int anzZiele = 2;
+	int anzToDestroy = 3;
 
 	Logger log = Logger.getLogger("SimLogger");
 	ArrayList<Vehicle> allVehicles = new ArrayList<Vehicle>();
@@ -26,8 +27,9 @@ public class Simulation extends JFrame {
 	static int width;
 	static int height;
 
-	Simulation(Double[][] winkel, ArrayList<Integer[]> swarmPositions) throws IOException {
-
+	Simulation(Double[][] winkel, ArrayList<Integer[]> swarmPositions, int anzFz, int anzToDestroy) throws IOException {
+		this.anzFz = anzFz;
+		this.anzToDestroy = anzToDestroy;
 		FileWriter out = new FileWriter("array");
 
 		for (int y = 0; y < winkel.length; y++) {
@@ -69,27 +71,30 @@ public class Simulation extends JFrame {
 		controlsPanel.setBackground(Color.black);
 
 		JSlider speedSlider = new JSlider(JSlider.HORIZONTAL, 100);
-		JLabel sliderLabel = new JLabel("Speed");
-		sliderLabel.setForeground(Color.ORANGE);
-		speedSlider.setValue( speedSlider.getMaximum() - sleep);
-		JLabel speedLabel = new JLabel(String.valueOf(speedSlider.getMaximum() - sleep));
-		speedLabel.setForeground(Color.ORANGE);
+		speedSlider.setValue(speedSlider.getMaximum() - sleep);
+		speedSlider.setForeground(Color.ORANGE);
 
-		controlsPanel.add(sliderLabel);
-		controlsPanel.add(speedSlider);
+		JLabel speedLabel = new JLabel("Speed");
+		speedLabel.setForeground(Color.WHITE);
+
+		JLabel currSpeedLabel = new JLabel(String.valueOf(speedSlider.getMaximum() - speedSlider.getValue()));
+		currSpeedLabel.setText(String.valueOf(speedSlider.getValue()));
+		currSpeedLabel.setForeground(Color.WHITE);
+
 		controlsPanel.add(speedLabel);
+		controlsPanel.add(speedSlider);
+		controlsPanel.add(currSpeedLabel);
 
 		add(controlsPanel, BorderLayout.NORTH);
 		add(canvas, BorderLayout.CENTER);
 		validate();
 		setVisible(true);
 
-
 		speedSlider.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				sleep = speedSlider.getMaximum() - speedSlider.getValue();
-				speedLabel.setText(String.valueOf(speedSlider.getValue()));
+				currSpeedLabel.setText(String.valueOf(speedSlider.getValue()));
 			}
 		});
 
