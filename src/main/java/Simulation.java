@@ -15,7 +15,7 @@ public class Simulation extends JFrame {
     static int sleep = 5; // 8
     static double pix = 1;// 0.2
     int anzFz = 50;
-    int anzZiele = 2;
+    int anzZiele = 0;
     int anzToDestroy = 3;
 
     boolean pause = false;
@@ -29,9 +29,10 @@ public class Simulation extends JFrame {
     static int width;
     static int height;
 
-    Simulation(Double[][] winkel, ArrayList<Integer[]> swarmPositions, int anzFz, int anzToDestroy) throws IOException {
+    Simulation(Double[][] winkel, ArrayList<Integer[]> swarmPositions, ArrayList<Integer[]> targetPositions, int anzFz, int anzToDestroy) throws IOException {
         this.anzFz = anzFz;
         this.anzToDestroy = anzToDestroy;
+        anzZiele = targetPositions.size();
         FileWriter out = new FileWriter("array");
 
         for (int y = 0; y < winkel.length; y++) {
@@ -59,7 +60,7 @@ public class Simulation extends JFrame {
         }
 
         for (int i = 0; i < anzZiele; i++) {
-            Target target = new Target(winkel);
+            Target target = new Target(winkel, targetPositions);
             allTargets.add(target);
         }
 
@@ -126,11 +127,6 @@ public class Simulation extends JFrame {
                         v.steuern(allVehicles);
                         //System.out.println(v.pos[0]);
                         //System.out.println(v.pos[0]);
-                    }
-
-                    //Move all Targets on update
-                    for (Target t : allTargets) {
-                        t.move();
                     }
 
                     // Update the graphics on the canvas and redraw it
