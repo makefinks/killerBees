@@ -122,7 +122,6 @@
 		public void paintComponent(Graphics g) {
 
 
-
 			width = getWidth();
 			height = getHeight();
 			super.paintComponent(g);
@@ -194,10 +193,11 @@
 			count_last_pos++;
 
 
-
-				 for(Target t : allTargets){
-				 g2d.setColor(Color.RED);
-				 g2d.drawOval((int) Math.round(t.pos[0]), (int) Math.round(t.pos[1]), 1, 1);
+			 for(int i = 0; i < allTargets.size(); i++){
+				 g2d.setColor(Color.YELLOW);
+				 Target t = allTargets.get(i);
+				 //System.out.println(i);
+				 g2d.fillOval((int) (t.pos[0]-20),(int) (t.pos[1]-20), 30, 30);
 			 }
 
 		}
