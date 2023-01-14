@@ -6,10 +6,13 @@ public class Target {
     double[] pos;
     private static int id = 0;
     private boolean targetAcquired;
+
+    private int life = 0;
     //Double[][] winkel; brauchen targets winkel?
 
-    public Target(Double[][] winkel, ArrayList<Integer[]> targetPositions){
+    public Target(Double[][] winkel, ArrayList<Integer[]> targetPositions, int anzToDestroy){
         this.pos = new double[2];
+        this.life = anzToDestroy;
         //this.winkel = winkel;
         //pos[0] = 0;
         //pos[1] = 0;
@@ -34,7 +37,11 @@ public class Target {
         pos[1] = pos[1] + yoffset;
 
      */
+    public void reduceLife() {
+        life--;
+    }
 
-
-
+    public int getLife() {
+        return life;
+    }
 }

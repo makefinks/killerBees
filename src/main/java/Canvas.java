@@ -122,7 +122,6 @@
 		public void paintComponent(Graphics g) {
 
 
-
 			width = getWidth();
 			height = getHeight();
 			super.paintComponent(g);

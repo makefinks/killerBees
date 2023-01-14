@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.*;
@@ -60,7 +61,7 @@ public class Simulation extends JFrame {
         }
 
         for (int i = 0; i < anzZiele; i++) {
-            Target target = new Target(winkel, targetPositions);
+            Target target = new Target(winkel, targetPositions, anzToDestroy);
             allTargets.add(target);
         }
 
@@ -125,9 +126,11 @@ public class Simulation extends JFrame {
                     for (int i = 0; i < allVehicles.size(); i++) {
                         v = allVehicles.get(i);
                         v.steuern(allVehicles);
+                        collisionTarget(v);
                         //System.out.println(v.pos[0]);
                         //System.out.println(v.pos[0]);
                     }
+                    updateLists();
 
                     // Update the graphics on the canvas and redraw it
                     canvas.repaint();
@@ -145,5 +148,23 @@ public class Simulation extends JFrame {
 
         thread.start();
 
+    }
+
+    private void collisionTarget(Vehicle vehicle) {
+        // radius target = 15px
+        for (Target target : allTargets) {
+            boolean inCircle = Math.pow(vehicle.pos[0] - target.pos[0], 2) +
+                                Math.pow(vehicle.pos[1] - target.pos[1], 2)
+                                <= 15*15;
+            if (inCircle) {
+                target.reduceLife();
+                vehicle.reduceLife();
+            }
+        }
+    }
+
+    private void updateLists() {
+        allTargets.removeIf(t -> t.getLife() <= 0);
+        allVehicles.removeIf(v -> v.getLife() <= 0);
     }
 }

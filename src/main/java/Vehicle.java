@@ -22,6 +22,8 @@ public class Vehicle {
     final double max_acc; // Maximale Beschleunigung
     final double max_vel; // Maximale Geschwindigkeit
 
+    int life = 1;
+
     Double[][] winkel;
 
     ArrayList<Integer[]> swarmPositions = new ArrayList<>();
@@ -397,5 +399,11 @@ public class Vehicle {
         return erg;
     }
 
+    public void reduceLife() {
+        life--;
+    }
 
+    public int getLife() {
+        return life;
+    }
 }
