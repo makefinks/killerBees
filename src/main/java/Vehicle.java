@@ -39,7 +39,7 @@ public class Vehicle {
         this.FZB = 1; //1
         this.rad_sep = 7;// 50
         this.rad_zus = 25;// 25
-        this.rad_det = 300;
+        this.rad_det = 100;
         this.type = 0;
         this.max_acc = 0.05;// 0.1
         this.max_vel = 1;
