@@ -216,4 +216,8 @@ public class CanvasEditor extends JPanel implements MouseListener,KeyListener{
     public ArrayList<Integer[]> getSwarmPositions() {
         return swarmPositions;
     }
+
+    public ArrayList<Integer[]> getTargetPositions() {
+        return targetPositions;
+    }
 }

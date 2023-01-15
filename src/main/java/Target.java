@@ -1,20 +1,27 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Target {
 
     double[] pos;
-    private static int id;
+    private static int id = 0;
     private boolean targetAcquired;
-    Double[][] winkel;
 
-    public Target(Double[][] winkel){
+    private int life = 0;
+    //Double[][] winkel; brauchen targets winkel?
+
+    public Target(Double[][] winkel, ArrayList<Integer[]> targetPositions, int anzToDestroy){
         this.pos = new double[2];
+        this.life = anzToDestroy;
+        //this.winkel = winkel;
+        //pos[0] = 0;
+        //pos[1] = 0;
+        pos[0] = targetPositions.get(id)[0]; //+ Simulation.pix * 50 * Math.random()
+        pos[1] = targetPositions.get(id)[1];
         id++;
-        this.winkel = winkel;
-        pos[0] = 0;
-        pos[1] = 0;
     }
 
+    /*
     public void move(){
 
         //calculate new dest pos of vehicle
@@ -29,6 +36,12 @@ public class Target {
         pos[0] = pos[0] + xoffset;
         pos[1] = pos[1] + yoffset;
 
+     */
+    public void reduceLife() {
+        life--;
+    }
 
+    public int getLife() {
+        return life;
     }
 }

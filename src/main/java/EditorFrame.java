@@ -56,7 +56,7 @@ public class EditorFrame extends JFrame {
                 Simulation xx = null;
                 try {
                     xx = new Simulation(this.canvasEditor.getWinkel(), this.canvasEditor.getSwarmPositions(),
-                            nrOfVehicles, nrToDestroy);
+                            this.canvasEditor.getTargetPositions(), nrOfVehicles, nrToDestroy);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
