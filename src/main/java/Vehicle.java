@@ -2,13 +2,15 @@ import javax.swing.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Vehicle {
     static int allId = 0;
     int id; // Fahrzeug-ID
-    double rad_sep; // Radius f�r Zusammenbleiben
-    double rad_zus; // Radius f�r Separieren
+    double rad_sep; // Radius f�r Separieren
+    double rad_zus; // Radius f�r Zusammenbleiben
+    double rad_det; // Radius for detected targets
     int type; // Fahrzeug-Type (0: Verfolger; 1: Anf�hrer)
     final double FZL; // L�nge
     final double FZB; // Breite
@@ -37,6 +39,7 @@ public class Vehicle {
         this.FZB = 1; //1
         this.rad_sep = 7;// 50
         this.rad_zus = 25;// 25
+        this.rad_det = 300;
         this.type = 0;
         this.max_acc = 0.05;// 0.1
         this.max_vel = 1;
@@ -71,6 +74,18 @@ public class Vehicle {
             }
         }
         return neighbours;
+    }
+
+    ArrayList<Target> targetErmitteln(ArrayList<Target> targets, double radius){
+        ArrayList<Target> detectedTargets=new ArrayList<>();
+        for(int i=0;i< targets.size();i++){
+            Target t=targets.get(i);
+            double dist=Math.sqrt(Math.pow(this.pos[0]-t.pos[0],2)+Math.pow(this.pos[1]-t.pos[1],2));
+            if(dist<radius){
+                detectedTargets.add(t);
+            }
+        }
+        return detectedTargets;
     }
 
     double[] beschleunigungErmitteln(double[] vel_dest) {
@@ -113,6 +128,30 @@ public class Vehicle {
             pos_dest[1] = pos_dest[1] / neighbours.size();
 
             // 2. Zielgeschwindigkeit vel_dest berechnen
+            vel_dest[0] = pos_dest[0] - pos[0];
+            vel_dest[1] = pos_dest[1] - pos[1];
+
+            // 3. Zielbeschleunigung acc_dest berechnen
+            acc_dest = beschleunigungErmitteln(vel_dest);
+
+        }
+        return acc_dest;
+    }
+
+    double[] attractedByTarget(ArrayList<Target> targets){
+        ArrayList<Target> detectedTargets;
+        double[] pos_dest = new double[2];
+        double[] vel_dest = new double[2];
+        double[] acc_dest = new double[2];
+
+        acc_dest[0] = 0;
+        acc_dest[1] = 0;
+
+        detectedTargets=targetErmitteln(targets,rad_det);
+        if(detectedTargets.size()>0){
+            pos_dest[0] = detectedTargets.get(0).pos[0];
+            pos_dest[1] = detectedTargets.get(0).pos[1];
+
             vel_dest[0] = pos_dest[0] - pos[0];
             vel_dest[1] = pos_dest[1] - pos[1];
 
@@ -196,15 +235,17 @@ public class Vehicle {
         return acc_dest;
     }
 
-    public double[] beschleunigung_festlegen(ArrayList<Vehicle> allVehicles) {
+    public double[] beschleunigung_festlegen(ArrayList<Vehicle> allVehicles,ArrayList<Target> targets) {
 
         double[] acc_dest = new double[2];
         double[] acc_dest1 = new double[2];
         double[] acc_dest2 = new double[2];
         double[] acc_dest3 = new double[2];
+        double[] acc_dest4 = new double[2];
         double f_zus = 0.15; // 0.05
         double f_sep = 0.55; // 0.55
-        double f_aus = 0.3; // 0.4
+        double f_aus = 0.35; // 0.4
+        double f_att = 0.7;
 
         if (type == 1) {
             acc_dest = zufall();
@@ -213,9 +254,10 @@ public class Vehicle {
             //acc_dest1 = folgen(allVehicles);
             acc_dest2 = separieren(allVehicles);
             acc_dest3 = ausrichten(allVehicles);
+            acc_dest4 = attractedByTarget(targets);
 
-            acc_dest[0] = (f_zus * acc_dest1[0]) + (f_sep * acc_dest2[0] + (f_aus * acc_dest3[0]));
-            acc_dest[1] = (f_zus * acc_dest1[1]) + (f_sep * acc_dest2[1] + (f_aus * acc_dest3[1]));
+            acc_dest[0] = (f_zus * acc_dest1[0]) + (f_sep * acc_dest2[0] + (f_aus * acc_dest3[0] + (f_att * acc_dest4[0])));
+            acc_dest[1] = (f_zus * acc_dest1[1]) + (f_sep * acc_dest2[1] + (f_aus * acc_dest3[1] + (f_att * acc_dest4[1])));
 
         }
 
@@ -224,9 +266,9 @@ public class Vehicle {
     }
 
     private boolean lastColision=false;
-    void steuern(ArrayList<Vehicle> allVehicles) {
-        double[] acc_dest = beschleunigung_festlegen(allVehicles);
+    void steuern(ArrayList<Vehicle> allVehicles, ArrayList<Target> allTargets) {
 
+        double[] acc_dest = beschleunigung_festlegen(allVehicles, allTargets);
 
         //Kollisionsberechnung
         // Define the velocity vector as a line with starting point (x1, y1) and ending point (x2, y2)
@@ -234,8 +276,6 @@ public class Vehicle {
         double y1 = pos[1];
         double x2 = x1 + vel[0];
         double y2 = y1 + vel[1];
-
-
 
         // Collsisions pruefung und änderung der richtung
         //fläche vor dem vehikel

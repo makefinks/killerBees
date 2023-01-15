@@ -125,7 +125,7 @@ public class Simulation extends JFrame {
                     //Move all Vehicles on update
                     for (int i = 0; i < allVehicles.size(); i++) {
                         v = allVehicles.get(i);
-                        v.steuern(allVehicles);
+                        v.steuern(allVehicles, allTargets);
                         collisionTarget(v);
                         //System.out.println(v.pos[0]);
                         //System.out.println(v.pos[0]);
