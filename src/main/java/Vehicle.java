@@ -11,20 +11,26 @@ public class Vehicle {
     double rad_sep; // Radius f�r Separieren
     double rad_zus; // Radius f�r Zusammenbleiben
     double rad_det; // Radius for detected targets
+
+    double rad_redirect;
     int type; // Fahrzeug-Type (0: Verfolger; 1: Anf�hrer)
     final double FZL; // L�nge
     final double FZB; // Breite
     double[] pos; // Position
-
     double[] last_pos;
-
     double[] last_vel;
+
+    double[] tmpTargetPos;
+
+    int directionLock;
+    int lockCount;
     int lastCount;
     double[] vel; // Geschwindigkeit
     final double max_acc; // Maximale Beschleunigung
     final double max_vel; // Maximale Geschwindigkeit
 
     int life = 1;
+
 
     Double[][] winkel;
 
@@ -40,6 +46,10 @@ public class Vehicle {
         this.rad_sep = 7;// 50
         this.rad_zus = 25;// 25
         this.rad_det = 100;
+        //Direction change
+        this.rad_redirect = 10000;
+        directionLock = 100;
+        lockCount = 0;
         this.type = 0;
         this.max_acc = 0.05;// 0.1
         this.max_vel = 1;
@@ -48,6 +58,7 @@ public class Vehicle {
         vel = new double[2];
         last_pos = new double[2];
         last_vel = new double[2];
+        tmpTargetPos = null;
         lastCount = 0;
 
         //generate random pos based on swarmPositions
@@ -162,6 +173,17 @@ public class Vehicle {
         return acc_dest;
     }
 
+    void directOtherVehicles(ArrayList<Vehicle> allVehicles){
+
+        for(int i = 0; i<allVehicles.size(); i++){
+            Vehicle v = allVehicles.get(i);
+            double dist=Math.sqrt(Math.pow(this.pos[0]-v.pos[0],2)+Math.pow(this.pos[1]-v.pos[1],2));
+            if(dist<rad_redirect){
+                v.tmpTargetPos = pos;
+            }
+        }
+    }
+
     double[] separieren(ArrayList<Vehicle> all) {
         ArrayList<Vehicle> neighbours;
         double[] vel_dest = new double[2];
@@ -242,24 +264,54 @@ public class Vehicle {
         double[] acc_dest2 = new double[2];
         double[] acc_dest3 = new double[2];
         double[] acc_dest4 = new double[2];
-        double f_zus = 0.15; // 0.05
-        double f_sep = 0.55; // 0.55
-        double f_aus = 0.35; // 0.4
-        double f_att = 0.7;
+        double[] acc_redirect = new double[2];
+        double f_zus = 0.1; // 0.05
+        double f_sep = 0.2; // 0.55
+        double f_aus = 0.2; // 0.4
+        double f_att = 0.3;
+        double f_redirect = 0.4;
 
-        if (type == 1) {
-            acc_dest = zufall();
-        } else {
-            acc_dest1 = zusammenbleiben(allVehicles);
-            //acc_dest1 = folgen(allVehicles);
-            acc_dest2 = separieren(allVehicles);
-            acc_dest3 = ausrichten(allVehicles);
-            acc_dest4 = attractedByTarget(targets);
 
-            acc_dest[0] = (f_zus * acc_dest1[0]) + (f_sep * acc_dest2[0] + (f_aus * acc_dest3[0] + (f_att * acc_dest4[0])));
-            acc_dest[1] = (f_zus * acc_dest1[1]) + (f_sep * acc_dest2[1] + (f_aus * acc_dest3[1] + (f_att * acc_dest4[1])));
+        acc_dest1 = zusammenbleiben(allVehicles);
+        //acc_dest1 = folgen(allVehicles);
+        acc_dest2 = separieren(allVehicles);
+        acc_dest3 = ausrichten(allVehicles);
+        acc_dest4 = attractedByTarget(targets);
+
+
+        if(tmpTargetPos != null) {
+            double[] vel_dest = new double[2];
+
+            vel_dest[0] = tmpTargetPos[0] - pos[0];
+            vel_dest[1] = tmpTargetPos[1] - pos[1];
+
+            // 3. Zielbeschleunigung acc_dest berechnen
+            acc_redirect = beschleunigungErmitteln(vel_dest);
+
+            System.out.println("adjusting ");
+            if (lockCount < directionLock) {
+                lockCount++;
+            } else {
+                tmpTargetPos = null;
+                lockCount = 0;
+            }
+        }
+
+
+        if(tmpTargetPos!= null){
+            acc_dest[0] = (f_zus * acc_dest1[0]) + (f_sep * acc_dest2[0] + (f_aus * acc_dest3[0]) + (f_att * acc_dest4[0]) + (f_redirect * acc_redirect[0]));
+            acc_dest[1] = (f_zus * acc_dest1[1]) + (f_sep * acc_dest2[1] + (f_aus * acc_dest3[1]) + (f_att * acc_dest4[1]) + (f_redirect * acc_redirect[1]));
+
+
+        }else{
+            acc_dest[0] = (f_zus * acc_dest1[0]) + (f_sep * acc_dest2[0] + (f_aus * acc_dest3[0]) + (f_att * acc_dest4[0]));
+            acc_dest[1] = (f_zus * acc_dest1[1]) + (f_sep * acc_dest2[1] + (f_aus * acc_dest3[1]) + (f_att * acc_dest4[1]));
+
 
         }
+
+
+
 
         acc_dest = Vektorrechnung.truncate(acc_dest, max_acc);
         return acc_dest;
@@ -268,7 +320,28 @@ public class Vehicle {
     private boolean lastColision=false;
     void steuern(ArrayList<Vehicle> allVehicles, ArrayList<Target> allTargets) {
 
-        double[] acc_dest = beschleunigung_festlegen(allVehicles, allTargets);
+        /*
+        double[] acc_dest = new double[2];
+        if(tmpTargetPos != null){
+            double[] vel_dest = new double[2];
+
+            vel_dest[0] = tmpTargetPos[0] - pos[0];
+            vel_dest[1] = tmpTargetPos[1] - pos[1];
+
+            // 3. Zielbeschleunigung acc_dest berechnen
+            acc_dest = beschleunigungErmitteln(vel_dest);
+            acc_dest = Vektorrechnung.truncate(acc_dest, max_acc);
+
+            System.out.println("adjusting ");
+            if(lockCount < directionLock){
+                lockCount++;
+            }else{
+                tmpTargetPos = null;
+                lockCount = 0;
+            }
+        }else{
+            */
+           double[] acc_dest = beschleunigung_festlegen(allVehicles, allTargets);
 
         //Kollisionsberechnung
         // Define the velocity vector as a line with starting point (x1, y1) and ending point (x2, y2)

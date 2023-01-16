@@ -159,11 +159,13 @@ public class Simulation extends JFrame {
             if (inCircle) {
                 target.reduceLife();
                 vehicle.reduceLife();
+                vehicle.directOtherVehicles(allVehicles);
             }
         }
     }
 
     private void updateLists() {
+       // allVehicles.forEach(v -> System.out.println(Arrays.toString(v.tmpTargetPos)));
         allTargets.removeIf(t -> t.getLife() <= 0);
         allVehicles.removeIf(v -> v.getLife() <= 0);
     }
