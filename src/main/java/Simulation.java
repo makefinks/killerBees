@@ -125,7 +125,7 @@ public class Simulation extends JFrame {
                     //Move all Vehicles on update
                     for (int i = 0; i < allVehicles.size(); i++) {
                         v = allVehicles.get(i);
-                        v.steuern(allVehicles);
+                        v.steuern(allVehicles, allTargets);
                         collisionTarget(v);
                         //System.out.println(v.pos[0]);
                         //System.out.println(v.pos[0]);
@@ -159,11 +159,13 @@ public class Simulation extends JFrame {
             if (inCircle) {
                 target.reduceLife();
                 vehicle.reduceLife();
+                vehicle.directOtherVehicles(allVehicles);
             }
         }
     }
 
     private void updateLists() {
+       // allVehicles.forEach(v -> System.out.println(Arrays.toString(v.tmpTargetPos)));
         allTargets.removeIf(t -> t.getLife() <= 0);
         allVehicles.removeIf(v -> v.getLife() <= 0);
     }

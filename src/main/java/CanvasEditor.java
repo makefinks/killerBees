@@ -48,7 +48,7 @@ public class CanvasEditor extends JPanel implements MouseListener,KeyListener{
         //draw Target positions
         for (Integer[] tp : targetPositions) {
             g2d.setColor(Color.YELLOW);
-            g2d.fillOval(tp[0]-20,tp[1]-20, 30, 30);
+            g2d.fillOval(tp[0]-10,tp[1]-10, 20, 20);
 
         }
 

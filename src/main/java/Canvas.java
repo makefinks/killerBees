@@ -1,3 +1,5 @@
+	import org.w3c.dom.css.RGBColor;
+
 	import java.awt.*;
 	import java.security.AllPermission;
 	import java.util.*;
@@ -175,6 +177,13 @@
 
 				g2d.setColor(Color.white);
 				g2d.draw(q);
+
+				//This is used to draw the position one vehicle told the others to go to
+
+				if(fz.tmpTargetPos != null){
+					g2d.setColor(new Color(255, 1, 6, 50));
+					g2d.drawLine((int)fz.pos[0], (int)fz.pos[1], (int) fz.tmpTargetPos[0], (int)fz.tmpTargetPos[1]);
+				}
 
 
 				//g2d.fillOval((int) fz.pos[0], (int) fz.pos[1], 10, 10);
