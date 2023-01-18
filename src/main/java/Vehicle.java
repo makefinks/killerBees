@@ -47,7 +47,7 @@ public class Vehicle {
         this.rad_zus = 25;// 25
         this.rad_det = 100;
         //Direction change
-        this.rad_redirect = 10000;
+        this.rad_redirect = 300;
         directionLock = 100;
         lockCount = 0;
         this.type = 0;
@@ -65,9 +65,10 @@ public class Vehicle {
         Random rand = new Random();
         int posFromIndex = rand.nextInt(swarmPositions.size());
 
+        swarmPositions.forEach(t -> System.out.print(t[0] + ":" + t[1] + "|"));
 
-        pos[0] = swarmPositions.get(posFromIndex)[0] + Simulation.pix * 50 * Math.random();
-        pos[1] = swarmPositions.get(posFromIndex)[1] + Simulation.pix * 50 * Math.random();
+        pos[0] = swarmPositions.get(posFromIndex)[0] +  20 * Math.random();
+        pos[1] = swarmPositions.get(posFromIndex)[1] +  20 * Math.random();
         vel[0] = max_vel * Math.random();
         vel[1] = max_vel * Math.random();
 
@@ -265,8 +266,8 @@ public class Vehicle {
         double[] acc_dest3 = new double[2];
         double[] acc_dest4 = new double[2];
         double[] acc_redirect = new double[2];
-        double f_zus = 0.1; // 0.05
-        double f_sep = 0.2; // 0.55
+        double f_zus = 0.05; // 0.05
+        double f_sep = 0.3; // 0.55
         double f_aus = 0.2; // 0.4
         double f_att = 0.3;
         double f_redirect = 0.4;
