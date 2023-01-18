@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.io.IOException;
+import java.io.*;
 
 public class EditorFrame extends JFrame {
 
@@ -10,6 +8,10 @@ public class EditorFrame extends JFrame {
     private CanvasEditor canvasEditor;
     private JTextField inputNrOfVehicles;
     private JTextField inputNrToDestroy;
+    private JComboBox<String> mapList;
+    private JButton loadMapButton;
+
+    private JButton saveCurrMapButton;
 
     private JButton btnRun;
     public EditorFrame(){
@@ -37,6 +39,67 @@ public class EditorFrame extends JFrame {
         inputPanel.add(lblNrToDestroy);
         inputPanel.add(inputNrToDestroy);
         inputPanel.add(btnRun);
+
+        //Map loader
+        mapList = new JComboBox<>();
+        loadAllMaps(mapList);
+        loadMapButton = new JButton("Load");
+        inputPanel.add(mapList);
+        inputPanel.add(loadMapButton);
+
+        //Map saver
+        saveCurrMapButton = new JButton("save map");
+        inputPanel.add(saveCurrMapButton);
+
+
+        saveCurrMapButton.addActionListener(e -> {
+            String mapName = JOptionPane.showInputDialog("Map name: ");
+
+            if(!mapName.isEmpty()){
+
+                FileOutputStream fout = null;
+                try {
+                    fout = new FileOutputStream("src/main/java/maps/" + mapName);
+                    ObjectOutputStream oos = new ObjectOutputStream(fout);
+
+                    oos.writeObject(canvasEditor.getWinkel());
+
+                    fout.close();
+                    oos.close();
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+
+            }
+
+
+        });
+
+        loadMapButton.addActionListener(e ->{
+            String mapName = (String) mapList.getSelectedItem();
+
+            try {
+                FileInputStream fin = new FileInputStream("src/main/java/maps/"+mapName);
+                ObjectInputStream oin = new ObjectInputStream(fin);
+
+                Double[][] loadWinkel = (Double[][]) oin.readObject();
+                canvasEditor.setWinkel(loadWinkel);
+                canvasEditor.repaint();
+                validate();
+
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        });
+
         btnRun.addActionListener(e -> {
             if(this.canvasEditor.getSwarmPositions().size() > 0){
                 int nrOfVehicles = 0;
@@ -73,6 +136,18 @@ public class EditorFrame extends JFrame {
         validate();
         setVisible(true);
         canvasEditor.repaint();
+    }
+
+
+    private void loadAllMaps(JComboBox<String> mapList) {
+
+        File dir = new File("src/main/java/maps");
+        File[] mapFiles = dir.listFiles();
+
+        assert mapFiles != null;
+        for(File map : mapFiles){
+            mapList.addItem(map.getName());
+        }
     }
 
 

@@ -145,9 +145,7 @@
 							count++;
 
 							g2d.drawLine((int) (x/pix),(int) (y/pix),(int) (x/pix),(int) (y/pix));
-
-
-
+							
 						}
 					}
 				}
