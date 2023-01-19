@@ -10,6 +10,8 @@ public class CanvasEditor extends JPanel implements MouseListener,KeyListener{
     ArrayList<Point> line = new ArrayList<>();
     ArrayList<Integer[]> targetPositions = new ArrayList<>();
 
+    private boolean newLine=true;
+
     Timer t;
     Double[][] winkel;
 
@@ -58,6 +60,7 @@ public class CanvasEditor extends JPanel implements MouseListener,KeyListener{
             g2d.setColor(Color.RED);
             g2d.drawLine(pos[0] - 10, pos[1] - 10, pos[0] + 10, pos[1] + 10);
             g2d.drawLine(pos[0] - 10, pos[1] + 10, pos[0] + 10, pos[1] - 10);
+
         }
 
         g2d.setColor(Color.white);
@@ -81,7 +84,9 @@ public class CanvasEditor extends JPanel implements MouseListener,KeyListener{
         for (int i = 0; i < line.size(); i++) {
             g2d.drawLine(befor.x, befor.y, line.get(i).x, line.get(i).y);
             befor = line.get(i);
+
         }
+        //g2d.drawLine(befor.x, befor.y, getMousePosition().x, getMousePosition().y);
 
 
     }
@@ -97,16 +102,44 @@ public class CanvasEditor extends JPanel implements MouseListener,KeyListener{
             targetPositions.add(new Integer[]{e.getX(), e.getY()});
         }
 
+
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
 
+        if(e.getButton()==MouseEvent.BUTTON1){
+            line = new ArrayList<>();
+            t = new Timer(10, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent a) {
+                    Point p = getMousePosition();
+                    if (p == null) {
+                        return;
+                    }
+                    if (!line.contains(p) && getBounds().contains(p)) {
+                        line.add(p);
+                    }
+                    repaint();
+                }
+            });
+            t.start();
+        }
 
-        line = new ArrayList<>();
-        t = new Timer(10, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent a) {
+
+
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if(e.getButton()==MouseEvent.BUTTON1){
+            t.stop();
+        }
+        if(e.getButton()==MouseEvent.BUTTON3){
+            if(this.newLine) {
+                newLine=false;
+                line = new ArrayList<>();
                 Point p = getMousePosition();
                 if (p == null) {
                     return;
@@ -114,17 +147,13 @@ public class CanvasEditor extends JPanel implements MouseListener,KeyListener{
                 if (!line.contains(p) && getBounds().contains(p)) {
                     line.add(p);
                 }
-                repaint();
+            }else {
+                line.add(e.getPoint());
+                newLine=true;
             }
-        });
-        t.start();
+        }
 
 
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        t.stop();
 
         Point befor = line.get(0);
         int lastI = 0;
