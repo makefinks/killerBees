@@ -184,6 +184,10 @@ public class CanvasEditor extends JPanel implements MouseListener,KeyListener{
     }
 
 
+    public void setWinkel(Double[][] winkel) {
+        this.winkel = winkel;
+    }
+
     @Override
     public void mouseEntered(MouseEvent e) {
 
