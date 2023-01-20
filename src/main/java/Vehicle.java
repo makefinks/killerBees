@@ -376,7 +376,6 @@ public class Vehicle {
             // 3. Zielbeschleunigung acc_dest berechnen
             acc_redirect = beschleunigungErmitteln(vel_dest);
 
-            System.out.println("adjusting ");
             if (lockCount < directionLock) {
                 lockCount++;
             } else {

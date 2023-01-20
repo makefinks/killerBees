@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -35,6 +36,8 @@ public class Simulation extends JFrame {
     static int width;
     static int height;
 
+    private EditorFrame editorframe;
+
     Simulation(Double[][] winkel, ArrayList<Integer[]> swarmPositions, ArrayList<Integer[]> targetPositions, EditorFrame editorFrame) throws IOException {
         this.anzFz = editorFrame.getNrOfVehicles();
         this.anzToDestroy = editorFrame.getNrToDestroy();
@@ -42,6 +45,8 @@ public class Simulation extends JFrame {
         enableSight = editorFrame.getSightCheckbox().isSelected();
         enableMeasureTime = editorFrame.getMeasureTimeCheckbox().isSelected();
         measureTimeSleep = Integer.parseInt(editorFrame.getSleepTimeField().getText());
+
+        this.editorframe = editorFrame;
 
         /*
         FileWriter out = new FileWriter("array");
@@ -125,8 +130,9 @@ public class Simulation extends JFrame {
 
         stopStimulationButton.addActionListener(e -> {
             dispose();
-            new EditorFrame();
+            editorFrame.setVisible(true);
             sleep = 5;
+            Target.id = 0;
         });
         speedSlider.addChangeListener(new ChangeListener() {
             @Override
@@ -174,7 +180,8 @@ public class Simulation extends JFrame {
                             int option = JOptionPane.showConfirmDialog(this, "All Targets eliminated in " + time + " ms");
 
                             dispose();
-                            new EditorFrame();
+                            editorframe.setVisible(true);
+                            Target.id = 0;
                             break;
                         }
                     }

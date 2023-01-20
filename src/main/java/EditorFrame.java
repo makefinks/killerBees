@@ -148,9 +148,10 @@ public class EditorFrame extends JFrame {
                     showErrorMessage();
                     return;
                 }
-                this.dispose();
+                this.setVisible(false);
                 Simulation xx = null;
                 try {
+                    System.out.println(canvasEditor.targetPositions.size());
                     xx = new Simulation(this.canvasEditor.getWinkel(), this.canvasEditor.getSwarmPositions(),
                             this.canvasEditor.getTargetPositions(),this);
                     Vehicle.setRandom(randomCheckbox.isSelected());

@@ -4,7 +4,7 @@ import java.util.Random;
 public class Target {
 
     double[] pos;
-    private static int id = 0;
+    public static int id = 0;
     private boolean targetAcquired;
 
     private int life = 0;
