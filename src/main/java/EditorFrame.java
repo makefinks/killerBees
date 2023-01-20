@@ -23,6 +23,8 @@ public class EditorFrame extends JFrame {
     private JCheckBox measureTimeCheckbox;
     private JTextField sleepTimeField;
 
+    private JLabel measureSleepLabel;
+
     private int nrOfVehicles;
     private int nrToDestroy;
     public EditorFrame(){
@@ -71,8 +73,12 @@ public class EditorFrame extends JFrame {
 
         measureTimeCheckbox = new JCheckBox("measure time");
         sleepTimeField = new JTextField("1");
+        measureSleepLabel = new JLabel("sleep");
         inputPanel.add(measureTimeCheckbox);
         inputPanel.add(sleepTimeField);
+        inputPanel.add(measureSleepLabel);
+
+        this.setResizable(false);
 
 
         measureTimeCheckbox.addActionListener(e -> {

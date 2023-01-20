@@ -1,9 +1,11 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.List;
 
 public class Vehicle {
     static int allId = 0;
@@ -101,7 +103,7 @@ public class Vehicle {
         for(int i=0;i< targets.size();i++){
             Target t=targets.get(i);
             double dist=Math.sqrt(Math.pow(this.pos[0]-t.pos[0],2)+Math.pow(this.pos[1]-t.pos[1],2));
-            if(dist<radius){
+            if(dist<radius && !checkForWallWithPixels(pos, t.pos)){
                 detectedTargets.add(t);
             }
         }
@@ -205,7 +207,7 @@ public class Vehicle {
 
         for(Target t : allTargets){
             Rectangle2D rect = new Rectangle2D.Double(t.pos[0], t.pos[1], 1, 1);
-            if(rect.intersectsLine(sightLine) && !checkForWall(pos, destPos, rect)){
+            if(rect.intersectsLine(sightLine) && !checkForWall(pos, destPos)){
                 tmpTargetPos = t.pos;
                 break;
             }
@@ -213,7 +215,7 @@ public class Vehicle {
 
     }
 
-    boolean checkForWall(double[] start, double[] end, Rectangle2D rect){
+    boolean checkForWall(double[] start, double[] end){
 
         int dx = (int) end[0];
         int dy = (int) end[1];
@@ -246,6 +248,58 @@ public class Vehicle {
             }
         }
         return result;
+    }
+
+    boolean checkForWallWithPixels(double[] start, double[] end){
+        Line2D line = new Line2D.Double(start[0], start[1], end[0], end[1]);
+
+        ArrayList<Point> pixels= (ArrayList<Point>) getPixels(line);
+
+        for(Point p : pixels){
+            if(winkel[p.x][p.y] != null){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    List<Point> getPixels(Line2D line) {
+        List<Point> pixels = new ArrayList<>();
+
+        int x1 = (int) line.getX1();
+        int y1 = (int) line.getY1();
+        int x2 = (int) line.getX2();
+        int y2 = (int) line.getY2();
+
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
+
+        int sx = x1 < x2 ? 1 : -1;
+        int sy = y1 < y2 ? 1 : -1;
+
+        int err = dx - dy;
+        int e2;
+
+        while (true) {
+            pixels.add(new Point(x1, y1));
+
+            if (x1 == x2 && y1 == y2) {
+                break;
+            }
+
+            e2 = 2 * err;
+            if (e2 > -dy) {
+                err = err - dy;
+                x1 = x1 + sx;
+            }
+            if (e2 < dx) {
+                err = err + dx;
+                y1 = y1 + sy;
+            }
+        }
+
+        return pixels;
     }
 
 
