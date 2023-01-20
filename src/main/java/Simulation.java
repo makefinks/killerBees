@@ -2,6 +2,7 @@ import java.awt.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import javax.swing.*;
@@ -116,6 +117,7 @@ public class Simulation extends JFrame {
         Thread thread = new Thread(() -> {
             Vehicle v;
 
+            long start = System.nanoTime();
             while (true) {
 
                 if (!pause) {
@@ -136,6 +138,13 @@ public class Simulation extends JFrame {
 
                     // Update the graphics on the window and redraw it
                     repaint();
+
+                    if(allTargets.size() == 0){
+                        long end = System.nanoTime();
+                        long time = end-start;
+                        time = TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS);
+                        JOptionPane.showConfirmDialog(this, "All Targets eliminated in " + time + " ms");
+                    }
                 }
                 try {
                     Thread.sleep(sleep);
