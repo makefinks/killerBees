@@ -43,7 +43,7 @@ public class Simulation extends JFrame {
             }
             out.write("\n");
         }
-        setSize(1000, 800);
+        setSize(1500, 1000);
         width = getWidth();
         height = getHeight();
 

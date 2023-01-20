@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.sql.SQLOutput;
 
 public class EditorFrame extends JFrame {
 
@@ -20,7 +21,7 @@ public class EditorFrame extends JFrame {
         setTitle("Editor");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //requestFocus(false);
-        setSize(1000, 800);
+        setSize(1500, 1000);
         canvasEditor = new CanvasEditor(this.getWidth(),this.getHeight());
 
         JPanel inputPanel = new JPanel();
@@ -85,7 +86,9 @@ public class EditorFrame extends JFrame {
                 FileInputStream fin = new FileInputStream("src/main/java/maps/"+mapName);
                 ObjectInputStream oin = new ObjectInputStream(fin);
 
+
                 Double[][] loadWinkel = (Double[][]) oin.readObject();
+
                 canvasEditor.setWinkel(loadWinkel);
                 canvasEditor.repaint();
                 validate();

@@ -31,7 +31,7 @@
 			this.allTargets = allTargets;
 			this.pix         = pix;
 			this.setBackground(Color.WHITE);
-			setPreferredSize(new Dimension(1000,800));
+			setPreferredSize(new Dimension(1500, 1000));
 			log.info("Simulation Canvas created");
 			this.winkel = winkel;
 		}

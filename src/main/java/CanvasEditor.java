@@ -41,11 +41,13 @@ public class CanvasEditor extends JPanel implements MouseListener,KeyListener{
 
         //Info display
         g2d.setColor(Color.white);
-        g2d.drawString("draw obstacles:  [hold left-mouse-button]", 0, 10);
+        g2d.drawString("Draw obstacles:  [hold left-mouse-button]", 0, 10);
         g2d.setColor(Color.RED);
-        g2d.drawString("swarm location: [hold shift] + [left-mouse-button]", 0, 20);
+        g2d.drawString("Swarm location: [hold shift] + [left-mouse-button]", 0, 20);
         g2d.setColor(Color.YELLOW);
         g2d.drawString("Target location:  [Double-mouse-click]", 0, 30);
+        g2d.setColor(Color.white);
+        g2d.drawString("Draw lines: select 2 points with [right-mouse-button]", 0, 40);
 
         //draw Target positions
         for (Integer[] tp : targetPositions) {
