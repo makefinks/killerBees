@@ -28,9 +28,9 @@ public class Simulation extends JFrame {
     static int width;
     static int height;
 
-    Simulation(Double[][] winkel, ArrayList<Integer[]> swarmPositions, ArrayList<Integer[]> targetPositions, int anzFz, int anzToDestroy, EditorFrame editorFrame) throws IOException {
-        this.anzFz = anzFz;
-        this.anzToDestroy = anzToDestroy;
+    Simulation(Double[][] winkel, ArrayList<Integer[]> swarmPositions, ArrayList<Integer[]> targetPositions, EditorFrame editorFrame) throws IOException {
+        this.anzFz = editorFrame.getNrOfVehicles();
+        this.anzToDestroy = editorFrame.getNrToDestroy();
         anzZiele = targetPositions.size();
         enableSight = editorFrame.getSightCheckbox().isSelected();
         FileWriter out = new FileWriter("array");

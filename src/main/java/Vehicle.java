@@ -31,6 +31,8 @@ public class Vehicle {
     final double max_acc; // Maximale Beschleunigung
     final double max_vel; // Maximale Geschwindigkeit
 
+    static boolean random = true;
+
 
     int life = 1;
 
@@ -331,23 +333,25 @@ public class Vehicle {
 
     public double[] beschleunigung_festlegen(ArrayList<Vehicle> allVehicles,ArrayList<Target> targets) {
 
-        double[] acc_dest = new double[2];
-        double[] acc_dest1 = new double[2];
-        double[] acc_dest2 = new double[2];
-        double[] acc_dest3 = new double[2];
-        double[] acc_dest4 = new double[2];
-        double[] acc_redirect = new double[2];
+        double[] acc_dest = new double[] {0,0};
+        double[] acc_dest1 = new double[] {0,0};
+        double[] acc_dest2 = new double[] {0,0};
+        double[] acc_dest3 = new double[] {0,0};
+        double[] acc_dest4 = new double[] {0,0};
+        double[] acc_redirect = new double[] {0,0};
         double f_zus = 0.05; // 0.05
         double f_sep = 0.3; // 0.55
         double f_aus = 0.2; // 0.4
         double f_att = 0.3;
         double f_redirect = 0.4;
 
+        if (!random) {
 
         acc_dest1 = zusammenbleiben(allVehicles);
         //acc_dest1 = folgen(allVehicles);
         acc_dest2 = separieren(allVehicles);
         acc_dest3 = ausrichten(allVehicles);
+        }
         acc_dest4 = attractedByTarget(targets);
 
 
@@ -590,5 +594,9 @@ public class Vehicle {
 
     public int getLife() {
         return life;
+    }
+
+    public static void setRandom(boolean random) {
+        Vehicle.random = random;
     }
 }

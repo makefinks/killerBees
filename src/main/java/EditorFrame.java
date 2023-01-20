@@ -16,7 +16,12 @@ public class EditorFrame extends JFrame {
 
     private JCheckBox  sightCheckbox;
 
+    private JCheckBox randomCheckbox;
+
     private JButton btnRun;
+
+    private int nrOfVehicles;
+    private int nrToDestroy;
     public EditorFrame(){
 
         setLayout(new BorderLayout());
@@ -57,6 +62,9 @@ public class EditorFrame extends JFrame {
         sightCheckbox = new JCheckBox("Enable sight");
         sightCheckbox.setSelected(true);
         inputPanel.add(sightCheckbox);
+
+        randomCheckbox = new JCheckBox("Random");
+        inputPanel.add(randomCheckbox);
 
 
         saveCurrMapButton.addActionListener(e -> {
@@ -111,8 +119,6 @@ public class EditorFrame extends JFrame {
 
         btnRun.addActionListener(e -> {
             if(this.canvasEditor.getSwarmPositions().size() > 0){
-                int nrOfVehicles = 0;
-                int nrToDestroy = 0;
                 try {
                     nrOfVehicles = Integer.parseInt(this.getInputNrOfVehicles().getText());
                     nrToDestroy = Integer.parseInt(this.getInputNrToDestroy().getText());
@@ -128,7 +134,8 @@ public class EditorFrame extends JFrame {
                 Simulation xx = null;
                 try {
                     xx = new Simulation(this.canvasEditor.getWinkel(), this.canvasEditor.getSwarmPositions(),
-                            this.canvasEditor.getTargetPositions(), nrOfVehicles, nrToDestroy, this);
+                            this.canvasEditor.getTargetPositions(),this);
+                    Vehicle.setRandom(randomCheckbox.isSelected());
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -247,5 +254,13 @@ public class EditorFrame extends JFrame {
 
     public JButton getBtnRun() {
         return btnRun;
+    }
+
+    public int getNrOfVehicles() {
+        return nrOfVehicles;
+    }
+
+    public int getNrToDestroy() {
+        return nrToDestroy;
     }
 }
