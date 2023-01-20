@@ -188,6 +188,11 @@
 					g2d.drawLine((int) fz.pos[0], (int) fz.pos[1], (int) fz.sightPos[0], (int) fz.sightPos[1]);
 				}
 
+				if(fz.debugVector != null){
+					g2d.setColor(Color.BLUE);
+					g2d.drawLine((int) fz.pos[0], (int) fz.pos[1], (int) fz.debugVector[0], (int) fz.debugVector[1]);
+				}
+
 
 				//g2d.fillOval((int) fz.pos[0], (int) fz.pos[1], 10, 10);
 

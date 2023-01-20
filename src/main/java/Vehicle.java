@@ -12,6 +12,7 @@ public class Vehicle {
     double rad_zus; // Radius f�r Zusammenbleiben
     double rad_det; // Radius for detected targets
 
+    double[] debugVector;
     double rad_redirect;
     int type; // Fahrzeug-Type (0: Verfolger; 1: Anf�hrer)
     final double FZL; // L�nge
@@ -63,6 +64,7 @@ public class Vehicle {
         vel = new double[2];
         last_pos = new double[2];
         last_vel = new double[2];
+        debugVector = null;
         tmpTargetPos = null;
         sightPos = null;
         lastCount = 0;
@@ -320,15 +322,21 @@ public class Vehicle {
 
     double[] zufall() {
         double[] acc_dest = new double[2];
-        acc_dest[0] = 0;
-        acc_dest[1] = 0;
 
-        if (Math.random() < 0.2) {
-            acc_dest[0] = max_acc * Math.random();
-            acc_dest[1] = max_acc * Math.random();
-        }
+        Random rand = new Random();
 
-        return acc_dest;
+            double[] random_pos = new double[2];
+            random_pos[0] = rand.nextDouble(4) - 2; // generates a random number between -2 and 2
+            random_pos[1] = rand.nextDouble(4) - 2; // generates a random number between -2 and 2
+
+            double[] pos_dest = new double[]{pos[0] + random_pos[0], pos[1] + random_pos[1]};
+
+
+            double[] vel_dest = new double[]{pos_dest[0] - pos[0], pos_dest[1]-pos[1]};
+            //debugVector = vel_dest;
+            return beschleunigungErmitteln(vel_dest);
+
+
     }
 
     public double[] beschleunigung_festlegen(ArrayList<Vehicle> allVehicles,ArrayList<Target> targets) {
