@@ -154,8 +154,8 @@
 				Polygon q = kfzInPolygon(fz);
 				Polygon q_last = kfzInPolygonLast(fz);
 
-				g2d.setColor(Color.GRAY);
-				g2d.draw(q_last);
+				//g2d.setColor(Color.GRAY);
+				//g2d.draw(q_last);
 				//last_pos_list.add(kfzInPolygon(fz.FZL, fz.FZB, fz.pos[0], fz.pos[1], fz.vel));
 
 				//if (count_last_pos > 5) {
@@ -181,6 +181,11 @@
 				if(fz.tmpTargetPos != null){
 					g2d.setColor(new Color(255, 1, 6, 50));
 					g2d.drawLine((int)fz.pos[0], (int)fz.pos[1], (int) fz.tmpTargetPos[0], (int)fz.tmpTargetPos[1]);
+				}
+
+				if(fz.sightPos != null){
+					g2d.setColor(new Color(128,128,128, 50));
+					g2d.drawLine((int) fz.pos[0], (int) fz.pos[1], (int) fz.sightPos[0], (int) fz.sightPos[1]);
 				}
 
 

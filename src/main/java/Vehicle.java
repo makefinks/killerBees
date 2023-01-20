@@ -22,12 +22,15 @@ public class Vehicle {
 
     double[] tmpTargetPos;
 
+    double[] sightPos;
+
     int directionLock;
     int lockCount;
     int lastCount;
     double[] vel; // Geschwindigkeit
     final double max_acc; // Maximale Beschleunigung
     final double max_vel; // Maximale Geschwindigkeit
+
 
     int life = 1;
 
@@ -59,6 +62,7 @@ public class Vehicle {
         last_pos = new double[2];
         last_vel = new double[2];
         tmpTargetPos = null;
+        sightPos = null;
         lastCount = 0;
 
         //generate random pos based on swarmPositions
@@ -173,6 +177,73 @@ public class Vehicle {
         }
         return acc_dest;
     }
+
+    void getTargetInSight(ArrayList<Vehicle> allVehicles, ArrayList<Target> allTargets){
+
+        int x1 = (int) pos[0];
+        int y1 = (int) pos[1];
+
+
+        double[] tmpVel = new double[2];
+        tmpVel[0] = vel[0];
+        tmpVel[1] = vel[1];
+        tmpVel = Vektorrechnung.normalize(vel);
+        tmpVel[0] = tmpVel[0] * 300;
+        tmpVel[1] = tmpVel[1] * 300;
+
+        int x2 = (int) (x1 + tmpVel[0]);
+        int y2 = (int) (y1 + tmpVel[1]);
+        double[] destPos = new double[]{x2, y2};
+
+        sightPos = destPos;
+
+        Line2D sightLine = new Line2D.Double(x1, y1, x2, y2);
+
+        for(Target t : allTargets){
+            Rectangle2D rect = new Rectangle2D.Double(t.pos[0], t.pos[1], 1, 1);
+            if(rect.intersectsLine(sightLine) && !checkForWall(pos, destPos, rect)){
+                tmpTargetPos = t.pos;
+                break;
+            }
+        }
+
+    }
+
+    boolean checkForWall(double[] start, double[] end, Rectangle2D rect){
+
+        int dx = (int) end[0];
+        int dy = (int) end[1];
+        Line2D line = new Line2D.Double(start[0], start[1], end[0], end[1]);
+        int startX = 0;
+        int startY = 0;
+        if (start[0] < end[0]) {
+            startX = (int) start[0];
+        } else {
+            startX =(int) end[0];
+        }
+        if (start[1] < end[1]) {
+            startY = (int)start[1];
+        } else {
+            startY =(int) end[1];
+        }
+
+        boolean result = false;
+        for (int x = startX; x>0&&x < startX + dx && x < winkel.length; x++) { //+dx
+            for (int y = startY; y>0&&y < startY + dy && y < winkel[x].length; y++) { //+dy
+                if (winkel[x][y] != null && x!=startX && y!= startY ) {
+                    Rectangle2D w = new Rectangle2D.Double(x,y, 1, 1);
+
+                    if(w.intersectsLine(line)){
+                        result = true;
+                        break;
+                    }
+
+                }
+            }
+        }
+        return result;
+    }
+
 
     void directOtherVehicles(ArrayList<Vehicle> allVehicles){
 

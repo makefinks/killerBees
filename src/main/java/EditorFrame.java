@@ -14,6 +14,8 @@ public class EditorFrame extends JFrame {
 
     private JButton saveCurrMapButton;
 
+    private JCheckBox  sightCheckbox;
+
     private JButton btnRun;
     public EditorFrame(){
 
@@ -51,6 +53,10 @@ public class EditorFrame extends JFrame {
         //Map saver
         saveCurrMapButton = new JButton("save map");
         inputPanel.add(saveCurrMapButton);
+
+        sightCheckbox = new JCheckBox("Enable sight");
+        sightCheckbox.setSelected(true);
+        inputPanel.add(sightCheckbox);
 
 
         saveCurrMapButton.addActionListener(e -> {
@@ -122,7 +128,7 @@ public class EditorFrame extends JFrame {
                 Simulation xx = null;
                 try {
                     xx = new Simulation(this.canvasEditor.getWinkel(), this.canvasEditor.getSwarmPositions(),
-                            this.canvasEditor.getTargetPositions(), nrOfVehicles, nrToDestroy);
+                            this.canvasEditor.getTargetPositions(), nrOfVehicles, nrToDestroy, this);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -221,5 +227,25 @@ public class EditorFrame extends JFrame {
 
     public void showErrorMessage() {
         JOptionPane.showMessageDialog(this, "Please enter valid Input!");
+    }
+
+    public JComboBox<String> getMapList() {
+        return mapList;
+    }
+
+    public JButton getLoadMapButton() {
+        return loadMapButton;
+    }
+
+    public JButton getSaveCurrMapButton() {
+        return saveCurrMapButton;
+    }
+
+    public JCheckBox getSightCheckbox() {
+        return sightCheckbox;
+    }
+
+    public JButton getBtnRun() {
+        return btnRun;
     }
 }

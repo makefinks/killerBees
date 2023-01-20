@@ -1,11 +1,7 @@
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.*;
@@ -21,6 +17,8 @@ public class Simulation extends JFrame {
 
     boolean pause = false;
 
+    boolean enableSight = true;
+
     Logger log = Logger.getLogger("SimLogger");
     ArrayList<Vehicle> allVehicles = new ArrayList<Vehicle>();
     ArrayList<Target> allTargets = new ArrayList<Target>();
@@ -30,10 +28,11 @@ public class Simulation extends JFrame {
     static int width;
     static int height;
 
-    Simulation(Double[][] winkel, ArrayList<Integer[]> swarmPositions, ArrayList<Integer[]> targetPositions, int anzFz, int anzToDestroy) throws IOException {
+    Simulation(Double[][] winkel, ArrayList<Integer[]> swarmPositions, ArrayList<Integer[]> targetPositions, int anzFz, int anzToDestroy, EditorFrame editorFrame) throws IOException {
         this.anzFz = anzFz;
         this.anzToDestroy = anzToDestroy;
         anzZiele = targetPositions.size();
+        enableSight = editorFrame.getSightCheckbox().isSelected();
         FileWriter out = new FileWriter("array");
 
         for (int y = 0; y < winkel.length; y++) {
@@ -151,6 +150,11 @@ public class Simulation extends JFrame {
     }
 
     private void collisionTarget(Vehicle vehicle) {
+
+        if(enableSight){
+            vehicle.getTargetInSight(allVehicles, allTargets);
+        }
+
         // radius target = 15px
         for (Target target : allTargets) {
             boolean inCircle = Math.pow(vehicle.pos[0] - target.pos[0], 2) +
