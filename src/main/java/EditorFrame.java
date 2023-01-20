@@ -25,6 +25,9 @@ public class EditorFrame extends JFrame {
 
     private JLabel measureSleepLabel;
 
+    private JLabel randFactorLabel;
+    private JTextField randFactorField;
+
     private int nrOfVehicles;
     private int nrToDestroy;
     public EditorFrame(){
@@ -40,17 +43,27 @@ public class EditorFrame extends JFrame {
         inputPanel.setBackground(Color.darkGray);
         btnRun = new JButton("Run Simulation");
         JLabel lblNrVehicles = new JLabel("Number of Vehicles:");
+        lblNrVehicles.setForeground(Color.white);
         JLabel lblNrToDestroy = new JLabel("Number of hits to destroy:");
+        lblNrToDestroy.setForeground(Color.white);
         inputNrOfVehicles = new JTextField("100");
         inputNrOfVehicles.setColumns(3);
         inputNrToDestroy = new JTextField("5");
         inputNrToDestroy.setColumns(3);
         inputNrToDestroy.setBackground(Color.GRAY);
         inputNrOfVehicles.setBackground(Color.GRAY);
+
+        randFactorLabel = new JLabel("rand factor");
+        randFactorLabel.setForeground(Color.white);
+        randFactorField = new JTextField("0.1");
+
         inputPanel.add(lblNrVehicles);
         inputPanel.add(inputNrOfVehicles);
         inputPanel.add(lblNrToDestroy);
         inputPanel.add(inputNrToDestroy);
+
+        inputPanel.add(randFactorLabel);
+        inputPanel.add(randFactorField);
         inputPanel.add(btnRun);
 
         //Map loader
@@ -74,6 +87,7 @@ public class EditorFrame extends JFrame {
         measureTimeCheckbox = new JCheckBox("measure time");
         sleepTimeField = new JTextField("1");
         measureSleepLabel = new JLabel("sleep");
+        measureSleepLabel.setForeground(Color.white);
         inputPanel.add(measureTimeCheckbox);
         inputPanel.add(sleepTimeField);
         inputPanel.add(measureSleepLabel);
@@ -161,6 +175,7 @@ public class EditorFrame extends JFrame {
                     xx = new Simulation(this.canvasEditor.getWinkel(), this.canvasEditor.getSwarmPositions(),
                             this.canvasEditor.getTargetPositions(),this);
                     Vehicle.setRandom(randomCheckbox.isSelected());
+                    Vehicle.setRandFactor(Double.parseDouble(randFactorField.getText()));
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }

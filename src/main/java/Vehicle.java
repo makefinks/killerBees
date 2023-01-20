@@ -36,6 +36,8 @@ public class Vehicle {
 
     static boolean random = true;
 
+    static double rand_factor = 0.2;
+
 
     int life = 1;
 
@@ -83,6 +85,11 @@ public class Vehicle {
         vel[1] = max_vel * Math.random();
 
     }
+
+    public static void setRandFactor(double parseDouble) {
+        rand_factor = parseDouble;
+    }
+
 
     ArrayList<Vehicle> nachbarErmitteln(ArrayList<Vehicle> all, double radius1, double radius2) {
         ArrayList<Vehicle> neighbours = new ArrayList<Vehicle>();
@@ -438,15 +445,15 @@ public class Vehicle {
             }
         }
 
-
+        double[] acc_dest_randomizer = zufall();
+        double f_random = rand_factor;
         if(tmpTargetPos!= null){
-            acc_dest[0] = (f_zus * acc_dest1[0]) + (f_sep * acc_dest2[0] + (f_aus * acc_dest3[0]) + (f_att * acc_dest4[0]) + (f_redirect * acc_redirect[0]));
-            acc_dest[1] = (f_zus * acc_dest1[1]) + (f_sep * acc_dest2[1] + (f_aus * acc_dest3[1]) + (f_att * acc_dest4[1]) + (f_redirect * acc_redirect[1]));
-
+            acc_dest[0] = (f_zus * acc_dest1[0]) + (f_sep * acc_dest2[0] + (f_aus * acc_dest3[0]) + (f_att * acc_dest4[0]) + (f_redirect * acc_redirect[0]) + f_random*acc_dest_randomizer[0]);
+            acc_dest[1] = (f_zus * acc_dest1[1]) + (f_sep * acc_dest2[1] + (f_aus * acc_dest3[1]) + (f_att * acc_dest4[1]) + (f_redirect * acc_redirect[1]) + f_random*acc_dest_randomizer[1]);
 
         }else{
-            acc_dest[0] = (f_zus * acc_dest1[0]) + (f_sep * acc_dest2[0] + (f_aus * acc_dest3[0]) + (f_att * acc_dest4[0]));
-            acc_dest[1] = (f_zus * acc_dest1[1]) + (f_sep * acc_dest2[1] + (f_aus * acc_dest3[1]) + (f_att * acc_dest4[1]));
+            acc_dest[0] = (f_zus * acc_dest1[0]) + (f_sep * acc_dest2[0] + (f_aus * acc_dest3[0]) + (f_att * acc_dest4[0]) + f_random*acc_dest_randomizer[0]);
+            acc_dest[1] = (f_zus * acc_dest1[1]) + (f_sep * acc_dest2[1] + (f_aus * acc_dest3[1]) + (f_att * acc_dest4[1]) + f_random*acc_dest_randomizer[1]);
 
 
         }
