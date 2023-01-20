@@ -323,7 +323,7 @@ public class Vehicle {
         acc_dest[0] = 0;
         acc_dest[1] = 0;
 
-        if (Math.random() < 0.01) {
+        if (Math.random() < 0.2) {
             acc_dest[0] = max_acc * Math.random();
             acc_dest[1] = max_acc * Math.random();
         }
@@ -387,6 +387,9 @@ public class Vehicle {
         }
 
 
+        if(random){
+            acc_dest = zufall();
+        }
 
 
         acc_dest = Vektorrechnung.truncate(acc_dest, max_acc);
