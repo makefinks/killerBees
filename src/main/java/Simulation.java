@@ -18,7 +18,13 @@ public class Simulation extends JFrame {
 
     boolean pause = false;
 
-    boolean enableSight = true;
+    boolean enableSight;
+
+    boolean enableMeasureTime;
+
+    int measureTimeSleep;
+
+    JButton stopStimulationButton;
 
     Logger log = Logger.getLogger("SimLogger");
     ArrayList<Vehicle> allVehicles = new ArrayList<Vehicle>();
@@ -34,6 +40,10 @@ public class Simulation extends JFrame {
         this.anzToDestroy = editorFrame.getNrToDestroy();
         anzZiele = targetPositions.size();
         enableSight = editorFrame.getSightCheckbox().isSelected();
+        enableMeasureTime = editorFrame.getMeasureTimeCheckbox().isSelected();
+        measureTimeSleep = Integer.parseInt(editorFrame.getSleepTimeField().getText());
+
+        /*
         FileWriter out = new FileWriter("array");
 
         for (int y = 0; y < winkel.length; y++) {
@@ -43,6 +53,8 @@ public class Simulation extends JFrame {
             }
             out.write("\n");
         }
+
+         */
         setSize(1500, 1000);
         width = getWidth();
         height = getHeight();
@@ -91,16 +103,31 @@ public class Simulation extends JFrame {
             System.out.println("Pause");
         });
 
+        stopStimulationButton = new JButton("stop sim");
+
         controlsPanel.add(pauseButton);
         controlsPanel.add(speedLabel);
         controlsPanel.add(speedSlider);
         controlsPanel.add(currSpeedLabel);
+        controlsPanel.add(stopStimulationButton);
 
         add(controlsPanel, BorderLayout.NORTH);
         add(canvas, BorderLayout.CENTER);
         validate();
         setVisible(true);
 
+        if(enableMeasureTime){
+            sleep = measureTimeSleep;
+            speedSlider.setEnabled(false);
+            pauseButton.setEnabled(false);
+        }
+
+
+        stopStimulationButton.addActionListener(e -> {
+            dispose();
+            new EditorFrame();
+            sleep = 5;
+        });
         speedSlider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -139,11 +166,17 @@ public class Simulation extends JFrame {
                     // Update the graphics on the window and redraw it
                     repaint();
 
-                    if(allTargets.size() == 0){
-                        long end = System.nanoTime();
-                        long time = end-start;
-                        time = TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS);
-                        JOptionPane.showConfirmDialog(this, "All Targets eliminated in " + time + " ms");
+                    if(enableMeasureTime) {
+                        if (allTargets.size() == 0) {
+                            long end = System.nanoTime();
+                            long time = end - start;
+                            time = TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS);
+                            int option = JOptionPane.showConfirmDialog(this, "All Targets eliminated in " + time + " ms");
+
+                            dispose();
+                            new EditorFrame();
+                            break;
+                        }
                     }
                 }
                 try {

@@ -20,6 +20,9 @@ public class EditorFrame extends JFrame {
 
     private JButton btnRun;
 
+    private JCheckBox measureTimeCheckbox;
+    private JTextField sleepTimeField;
+
     private int nrOfVehicles;
     private int nrToDestroy;
     public EditorFrame(){
@@ -65,6 +68,21 @@ public class EditorFrame extends JFrame {
 
         randomCheckbox = new JCheckBox("Random");
         inputPanel.add(randomCheckbox);
+
+        measureTimeCheckbox = new JCheckBox("measure time");
+        sleepTimeField = new JTextField("1");
+        inputPanel.add(measureTimeCheckbox);
+        inputPanel.add(sleepTimeField);
+
+
+        measureTimeCheckbox.addActionListener(e -> {
+
+            if(measureTimeCheckbox.isSelected()){
+                sleepTimeField.setEnabled(true);
+            }else{
+                sleepTimeField.setEnabled(false);
+            }
+        });
 
 
         saveCurrMapButton.addActionListener(e -> {
@@ -262,5 +280,17 @@ public class EditorFrame extends JFrame {
 
     public int getNrToDestroy() {
         return nrToDestroy;
+    }
+
+    public JCheckBox getRandomCheckbox() {
+        return randomCheckbox;
+    }
+
+    public JCheckBox getMeasureTimeCheckbox() {
+        return measureTimeCheckbox;
+    }
+
+    public JTextField getSleepTimeField() {
+        return sleepTimeField;
     }
 }
