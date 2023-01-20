@@ -251,11 +251,13 @@ public class Vehicle {
 
     void directOtherVehicles(ArrayList<Vehicle> allVehicles){
 
-        for(int i = 0; i<allVehicles.size(); i++){
-            Vehicle v = allVehicles.get(i);
-            double dist=Math.sqrt(Math.pow(this.pos[0]-v.pos[0],2)+Math.pow(this.pos[1]-v.pos[1],2));
-            if(dist<rad_redirect){
-                v.tmpTargetPos = pos;
+        if(!random){
+            for(int i = 0; i<allVehicles.size(); i++){
+                Vehicle v = allVehicles.get(i);
+                double dist=Math.sqrt(Math.pow(this.pos[0]-v.pos[0],2)+Math.pow(this.pos[1]-v.pos[1],2));
+                if(dist<rad_redirect){
+                    v.tmpTargetPos = pos;
+                }
             }
         }
     }
@@ -363,6 +365,8 @@ public class Vehicle {
         acc_dest4 = attractedByTarget(targets);
 
 
+
+
         if(tmpTargetPos != null) {
             double[] vel_dest = new double[2];
 
@@ -394,11 +398,11 @@ public class Vehicle {
 
         }
 
-
         if(random){
             acc_dest = zufall();
+            acc_dest[0] = acc_dest[0] * 0.5 + acc_redirect[0] * 0.5;
+            acc_dest[1] = acc_dest[1] * 0.5 + acc_redirect[1] * 0.5;
         }
-
 
         acc_dest = Vektorrechnung.truncate(acc_dest, max_acc);
         return acc_dest;
