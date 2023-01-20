@@ -16,6 +16,9 @@ public class EditorFrame extends JFrame {
 
     private JCheckBox  sightCheckbox;
 
+    private JCheckBox preRenderCheckbox;
+    private JTextField preRenderField;
+
     private JButton btnRun;
     public EditorFrame(){
 
@@ -58,6 +61,21 @@ public class EditorFrame extends JFrame {
         sightCheckbox.setSelected(true);
         inputPanel.add(sightCheckbox);
 
+        preRenderCheckbox = new JCheckBox("pre-render");
+        preRenderField = new JTextField("10000");
+        preRenderField.setEnabled(false);
+
+        inputPanel.add(preRenderCheckbox);
+        inputPanel.add(preRenderField);
+
+
+        preRenderCheckbox.addActionListener(e -> {
+            if(preRenderCheckbox.isSelected()){
+                preRenderField.setEnabled(true);
+            }else{
+                preRenderField.setEnabled(false);
+            }
+        });
 
         saveCurrMapButton.addActionListener(e -> {
             String mapName = JOptionPane.showInputDialog("Map name: ");
@@ -230,6 +248,7 @@ public class EditorFrame extends JFrame {
     }
 
     public JComboBox<String> getMapList() {
+
         return mapList;
     }
 
@@ -247,5 +266,13 @@ public class EditorFrame extends JFrame {
 
     public JButton getBtnRun() {
         return btnRun;
+    }
+
+    public JCheckBox getPreRenderCheckbox() {
+        return preRenderCheckbox;
+    }
+
+    public JTextField getPreRenderField() {
+        return preRenderField;
     }
 }

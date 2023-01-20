@@ -7,8 +7,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="AgentenSchwarm" />
-        <module name="killerBees" />
-        <module name="killerBees - Kopie" />
       </profile>
     </annotationProcessing>
   </component>

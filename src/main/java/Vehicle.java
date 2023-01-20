@@ -39,6 +39,36 @@ public class Vehicle {
 
     ArrayList<Integer[]> swarmPositions = new ArrayList<>();
 
+    Vehicle (Vehicle v){
+       this.winkel = Arrays.copyOf(v.winkel, v.winkel.length);
+       this.swarmPositions = (ArrayList<Integer[]>) v.swarmPositions.clone();
+       id = allId;
+       FZL = v.FZL;
+
+    this.FZB = v.FZB; //1
+    this.rad_sep = v.rad_sep;// 50
+    this.rad_zus = v.rad_zus;// 25
+    this.rad_det = v.rad_det;
+    //Direction change
+    this.rad_redirect = v.rad_redirect;
+    directionLock = v.directionLock;
+    lockCount = v.lockCount;
+    this.type = v.type;
+    this.max_acc = v.max_acc;// 0.1
+    this.max_vel = v.max_vel;
+
+    this.pos = Arrays.copyOf(v.pos, v.pos.length);
+    this.vel = Arrays.copyOf(v.vel, v.vel.length);
+    this.last_pos = Arrays.copyOf(v.last_pos, v.last_pos.length);
+    this.last_vel = Arrays.copyOf(v.last_vel, v.last_vel.length);
+    if(tmpTargetPos != null){
+        this.tmpTargetPos = Arrays.copyOf(v.tmpTargetPos, v.tmpTargetPos.length);
+    }
+
+    this.sightPos = Arrays.copyOf(v.sightPos, v.sightPos.length);
+
+
+    }
     Vehicle(Double[][] winkel, ArrayList<Integer[]> swarmPositions) {
         this.winkel = winkel;
         this.swarmPositions = swarmPositions;

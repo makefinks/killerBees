@@ -2,8 +2,11 @@ import java.awt.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
+import javax.security.auth.callback.CallbackHandler;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -14,15 +17,14 @@ public class Simulation extends JFrame {
     int anzFz = 50;
     int anzZiele = 0;
     int anzToDestroy = 3;
-
     boolean pause = false;
-
     boolean enableSight = true;
+    boolean preRender;
+    int preRenderFrameCount;
 
     Logger log = Logger.getLogger("SimLogger");
     ArrayList<Vehicle> allVehicles = new ArrayList<Vehicle>();
     ArrayList<Target> allTargets = new ArrayList<Target>();
-
     Canvas canvas;
 
     static int width;
@@ -32,9 +34,14 @@ public class Simulation extends JFrame {
         this.anzFz = anzFz;
         this.anzToDestroy = anzToDestroy;
         anzZiele = targetPositions.size();
+        preRender = editorFrame.getPreRenderCheckbox().isSelected();
+
+        preRenderFrameCount = Integer.parseInt(editorFrame.getPreRenderField().getText());
+
         enableSight = editorFrame.getSightCheckbox().isSelected();
         FileWriter out = new FileWriter("array");
 
+        /*
         for (int y = 0; y < winkel.length; y++) {
             for (int x = 0; x < winkel[y].length; x++) {
                 out.write(String.valueOf(winkel[y][x]));
@@ -42,6 +49,8 @@ public class Simulation extends JFrame {
             }
             out.write("\n");
         }
+
+         */
         setSize(1500, 1000);
         width = getWidth();
         height = getHeight();
@@ -107,11 +116,66 @@ public class Simulation extends JFrame {
                 currSpeedLabel.setText(String.valueOf(speedSlider.getValue()));
             }
         });
-
     }
 
     public void run() {
 
+        if(preRender){
+            Vehicle v = null;
+            ArrayList<ArrayList<Vehicle>> frames = new ArrayList<>();
+            for(int it = 0; it<preRenderFrameCount; it++){
+
+                for (int i = 0; i < allVehicles.size(); i++) {
+                    v = allVehicles.get(i);
+                    v.steuern(allVehicles, allTargets);
+                    collisionTarget(v);
+                }
+                updateLists();
+                ArrayList<Vehicle> copy = new ArrayList<>();
+                for(Vehicle vehicle : allVehicles){
+                    double[] posCopy = new double[]{vehicle.pos[0], vehicle.pos[1]};
+                    double[] velCopy = new double[]{vehicle.vel[0], vehicle.vel[1]};
+                    assert v != null;
+                    copy.add(new Vehicle(vehicle));
+                }
+                frames.add(copy);
+                System.out.println(it);
+            }
+
+            /*
+            System.out.println(frames.get(0).get(0).pos[0]);
+            System.out.println(frames.get(10).get(0).pos[0]);
+             */
+            //Display all frames
+
+            Thread displayThread = new Thread(() -> {
+                for(int frame = 0; frame<frames.size(); frame++){
+
+
+                    allVehicles = frames.get(frame);
+
+                    System.out.println(allVehicles.get(0).pos[0]);
+
+                   // System.out.println(allVehicles.get(0).pos[0]);
+                    canvas.repaint();
+                    repaint();
+
+                    System.out.println("displaying frame " + frame);
+                    try {
+                        Thread.sleep(sleep);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+
+            displayThread.start();
+
+
+
+
+            //pre Render than display frames
+        }else{
 
         Thread thread = new Thread(() -> {
             Vehicle v;
@@ -144,9 +208,8 @@ public class Simulation extends JFrame {
 
             }
         });
-
         thread.start();
-
+        }
     }
 
     private void collisionTarget(Vehicle vehicle) {

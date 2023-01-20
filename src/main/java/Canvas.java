@@ -123,6 +123,7 @@
 		@Override
 		public void paintComponent(Graphics g) {
 
+			System.out.println("reached");
 
 			width = getWidth();
 			height = getHeight();
@@ -152,7 +153,7 @@
 			for(int i=0;i<allVehicles.size();i++){
 				Vehicle fz = allVehicles.get(i);
 				Polygon q = kfzInPolygon(fz);
-				Polygon q_last = kfzInPolygonLast(fz);
+				//Polygon q_last = kfzInPolygonLast(fz);
 
 				//g2d.setColor(Color.GRAY);
 				//g2d.draw(q_last);
