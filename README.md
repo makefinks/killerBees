@@ -33,7 +33,7 @@ Gray lines-> sight of an individual
 Individuals of the swarm all have the following logic: 
 1. Move towards the center of all vehicles in a specified radius
 2. If another vehicle is to close, move away from it
-3. Ajust the direction to the directon of all vehicles in a specified radius
+3. Adjust the direction to the directon of all vehicles in a specified radius
 4. If a target is within a small radius, move towards it
 5. If a target collides with the sightline, move towards it
-6. If a target is found, notify vehicles nearby so they can adjust their directon
+6. If a target is found, notify vehicles nearby so they can adjust their direction
